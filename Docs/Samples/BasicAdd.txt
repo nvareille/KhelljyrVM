@@ -1,0 +1,14 @@
+fct truc
+	int a
+	int b
+	
+	set a 42
+	set b 42
+	
+	add a b a
+	
+	ret a
+	
+fct main
+	ret truc
+	

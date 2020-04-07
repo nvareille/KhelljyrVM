@@ -1,0 +1,4 @@
+[FctCallOP][FctIdx]
+[ArgSize][Ptr][Data]
+...
+[FctStart]

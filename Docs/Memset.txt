@@ -1,0 +1,3 @@
+[MemsetStaticOP][ptr][size][value]
+
+[MemsetReturnCarryOP][ptr][size]

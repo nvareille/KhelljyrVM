@@ -1,0 +1,9 @@
+----------------------
+[NBRFCT]   2
+[FCTIndex] Main => 0
+[FCTIndex] Test => Main + Sizeof(Main)
+----------------------
+[STACKSIZE] 4
+
+ret [0](4);
+----------------------
