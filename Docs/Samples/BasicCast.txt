@@ -1,0 +1,9 @@
+fct main
+	float a 42.5
+	int b
+	
+	add a 0.75 a
+	
+	cast a b
+	
+	ret b

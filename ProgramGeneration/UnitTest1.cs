@@ -7,7 +7,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ProgramGeneration
 {
-    [TestClass]
     public class UnitTest1
     {
         private byte[] OPCall(OPCodes.Codes c)
@@ -93,8 +92,6 @@ namespace ProgramGeneration
             //      Function Pop
             BitConverter.GetBytes((int)OPCodes.Codes.FctPop),
         };
-
-
 
         private List<byte[]> ReturnMultiple = new List<byte[]>
         {

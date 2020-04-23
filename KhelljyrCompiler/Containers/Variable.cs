@@ -50,7 +50,9 @@ namespace KhelljyrCompiler.Containers
         {
             if (Value is int)
                 return (BitConverter.GetBytes((int)(object)Value));
-            
+            if (Value is float)
+                return (BitConverter.GetBytes((float)(object)Value));
+
             return (null);
         }
     }
@@ -81,7 +83,7 @@ namespace KhelljyrCompiler.Containers
 
     public class ConstFloatVariable : ConstVariable<float>
     {
-        public ConstFloatVariable(int value) : base(value, TypeFlag.Float)
+        public ConstFloatVariable(float value) : base(value, TypeFlag.Float)
         {
             Size = Defines.SIZE_FLOAT;
         }

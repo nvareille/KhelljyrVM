@@ -14,7 +14,7 @@ namespace KhelljyrCompiler
         {
             // Types Scalaires
             {"int", Int},
-            //{"float", Float},
+            {"float", Float},
 
             // Declareurs
             {"fct", Function},
@@ -26,6 +26,7 @@ namespace KhelljyrCompiler
 
             // Arithmétique
             {"set", Set},
+            {"cast", Cast},
             {"add", Add},
 
             // Branchements
@@ -55,7 +56,7 @@ namespace KhelljyrCompiler
                 v.HaveValue = true;
                 v.Value = value;
 
-                fct.Instructions.Insert(0, new SetInstruction
+                fct.Instructions.Insert(0, new SetIntInstruction
                 {
                     Variable = v,
                     Value = v.Value
@@ -89,22 +90,99 @@ namespace KhelljyrCompiler
             fct.AddVariable(v);
         }
 
+        public static void Float(Compiler cmp, string[] args)
+        {
+            float value = 0;
+            Function fct = cmp.Functions.Last();
+            FloatVariable v = new FloatVariable
+            {
+                Name = args[1],
+            };
+
+            if (args.Length == 3 && Single.TryParse(args[2], out value))
+            {
+                v.HaveValue = true;
+                v.Value = value;
+
+                fct.Instructions.Insert(0, new SetFloatInstruction
+                {
+                    Variable = v,
+                    Value = v.Value
+                });
+            }
+            else if (args.Length >= 3)
+            {
+                int count = 3;
+                Function fctToCall = cmp.Functions.First(i => i.Name == args[2]);
+                FunctionRetInstruction ret = new FunctionRetInstruction
+                {
+                    FunctionToCall = fctToCall
+                };
+
+                fct.Instructions.Add(ret);
+                fct.Instructions.Add(new RetCarryInstruction(v));
+                while (args.Length > count)
+                {
+                    Variable target = fct.Variables.FirstOrDefault(a => a.Name == args[count]);
+
+                    if (target == null && Single.TryParse(args[count], out value))
+                    {
+                        target = new ConstFloatVariable(value);
+                    }
+
+                    ret.Variables.Add(target);
+                    ++count;
+                }
+            }
+
+            fct.AddVariable(v);
+        }
+
+        private static bool TryConstSet(Function fct, Variable v, string stringValue)
+        {
+            int i = 0;
+            float f = 0;
+
+            if (v.Type == TypeFlag.Float && Single.TryParse(stringValue, out f))
+            {
+                SetFloatInstruction ins = new SetFloatInstruction
+                {
+                    Variable = v,
+                    Value = f
+                };
+
+                fct.Instructions.Add(ins);
+
+                return (true);
+            }
+            if (v.Type == TypeFlag.Int && Int32.TryParse(stringValue, out i))
+            {
+                SetIntInstruction ins = new SetIntInstruction
+                {
+                    Variable = v,
+                    Value = i
+                };
+
+                fct.Instructions.Add(ins);
+
+                return (true);
+            }
+            
+            return (false);
+        }
+
         public static void Set(Compiler cmp, string[] args)
         {
             int value;
             Function fct = cmp.Functions.Last();
             Variable v = fct.Variables.First(a => a.Name == args[1]);
             
-            if (Int32.TryParse(args[2], out value))
+            if (TryConstSet(fct, v, args[2])) { }
+/* TODO Casts && Copy
+ else if ()
             {
-                SetInstruction i = new SetInstruction
-                {
-                    Variable = v,
-                    Value = value
-                };
 
-                fct.Instructions.Add(i);
-            }
+            }*/
             else
             {
                 int count = 3;
@@ -129,19 +207,24 @@ namespace KhelljyrCompiler
             }
         }
 
+        private static Variable TryConst(string stringValue)
+        {
+            Variable v = null;
+
+            if (Int32.TryParse(stringValue, out int ivalue))
+                v = new ConstIntVariable(ivalue);
+            else if (Single.TryParse(stringValue, out float fvalue))
+                v = new ConstFloatVariable(fvalue);
+            
+            return (v);
+        }
+
         public static void Add(Compiler cmp, string[] args)
         {
             Function fct = cmp.Functions.Last();
 
             Variable v1 = fct.Variables.First(a => a.Name == args[1]);
-            Variable v2 = fct.Variables.FirstOrDefault(a => a.Name == args[2]);
-
-            if (v2 == null)
-            {
-                int value = Int32.Parse(args[2]);
-
-                v2 = new ConstIntVariable(value);
-            }
+            Variable v2 = fct.Variables.FirstOrDefault(a => a.Name == args[2]) ?? TryConst(args[2]);
 
             AddInstruction i = new AddInstruction
             {

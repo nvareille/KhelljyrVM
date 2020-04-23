@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using KhelljyrCommon;
 using KhelljyrCompiler.Containers;
@@ -11,6 +12,7 @@ namespace KhelljyrCompiler
 {
     public class Compiler
     {
+        public Preprocessor Preprocessor = new Preprocessor();
         public List<string> Builder = new List<string>();
         public List<string> Files = new List<string>();
 
@@ -26,6 +28,11 @@ namespace KhelljyrCompiler
             Files.Add(file);
         }
 
+        public void AddPreprocessorFile(string file)
+        {
+            Preprocessor.AddFile(file);
+        }
+
         public void AddFiles(string[] files)
         {
             foreach (string file in files)
@@ -36,10 +43,12 @@ namespace KhelljyrCompiler
 
         public void Compile()
         {
+            Preprocessor.ComputePreprocessing();
             ReadFiles();
+            Preprocess();
             Process();
         }
-
+        
         public void ReadFiles()
         {
             Files.ForEach(i =>
@@ -58,17 +67,57 @@ namespace KhelljyrCompiler
             return (a);
         }
 
+        public void Preprocess()
+        {
+            List<string> preprocessed = new List<string>();
+
+            Builder.ForEach(i =>
+            {
+                string str = i;
+
+                foreach (KeyValuePair<string, string> pair in Preprocessor.Values)
+                {
+                    str = str.Replace(pair.Key, pair.Value);
+                }
+
+                preprocessed.Add(str);
+            });
+
+            Builder = preprocessed;
+        }
+
         public void Process()
         {
             OPInterpretor interpretor = new OPInterpretor();
 
             Builder.ForEach(i =>
             {
+                bool b = false;
+
                 i = TrimLine(i);
 
                 if (i == "") return;
 
-                interpretor.Treat(this, i.Split(" "));
+                string str = new string(i.TakeWhile(o =>
+                {
+                    if (o == '/')
+                    {
+                        if (b)
+                            return (false);
+                        b = true;
+                    }
+                    else
+                        b = false;
+
+                    return (true);
+                }).ToArray());
+
+                if (b)
+                    str = new string(str.SkipLast(1).ToArray());
+
+                str = TrimLine(str);
+
+                interpretor.Treat(this, str.Split(" "));
             });
 
             DoFunctionPriority();

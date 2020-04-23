@@ -25,6 +25,7 @@ namespace KhelljyrCommon
             AssignStaticConditionRegister,
             AssignTypeRegister,
 
+            Cast,
             OperationAdd,
             /*OperationLess,
             OperationLessConst,

@@ -24,6 +24,7 @@ namespace KhelljyrCommon
             {OPCodes.Codes.AssignStaticConditionRegister, OPCalls.Memset.AssignStaticConditionRegister},
             {OPCodes.Codes.AssignTypeRegister, OPCalls.Memset.AssignTypeRegister},
 
+            {OPCodes.Codes.Cast, OPCalls.Arithmetics.Cast},
             {OPCodes.Codes.OperationAdd, OPCalls.Arithmetics.Add},
             /*{OPCodes.Codes.OperationLess, OPCalls.Arithmetics.Less},
             {OPCodes.Codes.OperationLessConst, OPCalls.Arithmetics.LessConst},

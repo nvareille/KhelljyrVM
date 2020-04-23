@@ -13,7 +13,7 @@ namespace ProgramGeneration
     [TestClass]
     public class CompilerTests
     {
-        public int TestFile(string file)
+        public int TestFile(string file, IEnumerable<string> preprocessor = null)
         {
             string outputName = file.Split('/').Last().Split('.').First();
             Compiler c = new Compiler();
@@ -21,6 +21,14 @@ namespace ProgramGeneration
             Processor p = new Processor();
 
             byte[] prog = null;
+
+            if (preprocessor != null)
+            {
+                foreach (string s in preprocessor)
+                {
+                    c.AddPreprocessorFile(s);
+                }
+            }
 
             c.AddFile(file);
             c.Compile();
@@ -71,6 +79,27 @@ namespace ProgramGeneration
         public void BasicFctVar()
         {
             Assert.AreEqual(126, TestFile("Samples/BasicFctVar.txt"));
+        }
+
+        [TestMethod]
+        public void BasicLoop()
+        {
+            Assert.AreEqual(10, TestFile("Samples/BasicLoop.txt"));
+        }
+
+        [TestMethod]
+        public void BasicPreprocessing()
+        {
+            Assert.AreEqual(42, TestFile("Samples/BasicPreprocessing.txt", new List<string>
+            {
+                "Samples/Defines.txt"
+            }));
+        }
+
+        [TestMethod]
+        public void BasicCast()
+        {
+            Assert.AreEqual(43, TestFile("Samples/BasicCast.txt"));
         }
 
         [TestMethod]

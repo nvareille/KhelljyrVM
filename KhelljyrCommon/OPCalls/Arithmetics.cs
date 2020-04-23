@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Microsoft.VisualBasic.CompilerServices;
 
 namespace KhelljyrCommon.OPCalls
 {
@@ -37,18 +38,6 @@ namespace KhelljyrCommon.OPCalls
             throw new Exception("Unknown Type");
         }
 
-        public static int ConvertToInt(object v)
-        {
-            if (v is float)
-                return ((int) v);
-            if (v is int)
-                return ((int) v);
-            if (v is char)
-                return ((char) v);
-
-            return (0);
-        }
-
         public static byte[] Convert(object o, TypeFlag f)
         {
             byte[] b = null;
@@ -68,7 +57,7 @@ namespace KhelljyrCommon.OPCalls
                     b = BitConverter.GetBytes((int)o);
                 if (o is int)
                     b = BitConverter.GetBytes((int)o);
-                if (o is char)
+                if (o is float)
                     b = BitConverter.GetBytes((int)o);
             }
             else if (f == TypeFlag.Float)
@@ -77,11 +66,41 @@ namespace KhelljyrCommon.OPCalls
                     b = BitConverter.GetBytes((float)o);
                 if (o is int)
                     b = BitConverter.GetBytes((float)o);
-                if (o is char)
+                if (o is float)
                     b = BitConverter.GetBytes((float)o);
             }
 
             return (b);
+        }
+
+        public static int Cast(Processor proc, ProgramReader reader)
+        {
+            TypeFlag returnType = (TypeFlag)reader.NextInt();
+            uint addr = reader.NextPtr();
+
+            object v1 = BytesToNative(proc.Registers.TypeRegisters[0], proc.Registers.OperationRegisters[0]);
+            byte[] b = null;
+
+            switch (returnType)
+            {
+                case TypeFlag.Char:
+                    v1 = Conversions.ToChar(v1);
+                    break;
+
+                case TypeFlag.Int:
+                    v1 = Conversions.ToInteger(v1);
+                    break;
+
+                case TypeFlag.Float:
+                    v1 = Conversions.ToSingle(v1);
+                    break;
+            }
+
+            b = Convert(v1, returnType);
+
+            Array.Copy(b, 0, proc.ActiveStackContainer.Memory.Memory, addr, b.Length);
+
+            return (reader.Elapsed());
         }
 
         public static int Add(Processor proc, ProgramReader reader)

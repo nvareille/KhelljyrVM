@@ -1,0 +1,8 @@
+fct main
+	int a
+	
+	lbl loop
+		add a 1 a
+		if a < 10 loop
+		
+	ret a
