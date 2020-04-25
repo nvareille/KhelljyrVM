@@ -12,5 +12,10 @@ namespace KhelljyrCommon.OPCalls
 
             return (reader.Elapsed());
         }
+
+        public static int Brk(Processor proc, ProgramReader reader)
+        {
+            return (reader.Elapsed());
+        }
     }
 }

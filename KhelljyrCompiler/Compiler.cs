@@ -117,7 +117,8 @@ namespace KhelljyrCompiler
 
                 str = TrimLine(str);
 
-                interpretor.Treat(this, str.Split(" "));
+                if (!string.IsNullOrEmpty(str))
+                    interpretor.Treat(this, str.Split(" "));
             });
 
             DoFunctionPriority();

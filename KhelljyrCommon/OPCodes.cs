@@ -16,9 +16,11 @@ namespace KhelljyrCommon
             VarConstCopy,
 
             AssignStatic,
+            AssignToPointer,
             AssignReturnCarry,
             SetReturnCarry,
-            
+            AssignPtrCarry,
+
             AssignOperationRegister,
             AssignConstOperationRegister,
             AssignConditionRegister,
@@ -42,6 +44,7 @@ namespace KhelljyrCommon
             Jump,
 
             Exit,
+            Brk,
         }
     }
 }

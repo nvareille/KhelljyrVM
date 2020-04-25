@@ -14,8 +14,13 @@ namespace KhelljyrCommon
         public RangeContainer(int start, int size)
         {
             Start = start;
-            End = start + size;
+            End = start + size - 1;
             Memory = new byte[size];
+        }
+
+        public bool ContainsAddress(uint dest)
+        {
+            return (Start <= dest && End >= dest);
         }
     }
 
@@ -43,6 +48,7 @@ namespace KhelljyrCommon
         public void Free(RangeContainer container)
         {
             Segments.Remove(container);
+            Last = null;
         }
 
         public void Free(int start)
@@ -50,6 +56,70 @@ namespace KhelljyrCommon
             int idx = Segments.FindIndex(i => i.Start == start);
 
             Segments.RemoveAt(idx);
+            Last = null;
+        }
+
+        private void ComputeLast(uint dest)
+        {
+            try
+            {
+                if (Last == null || !Last.ContainsAddress(dest))
+                    Last = Segments.First(i => i.Start <= dest && i.End >= dest);
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Segmentation Fault");
+            }
+            
+        }
+
+        public void WriteByte(byte b, uint dest)
+        {
+            ComputeLast(dest);
+
+            dest -= (uint)Last.Start;
+            Last.Memory[dest] = b;
+        }
+
+        public void WriteBytes(byte[] array, uint dest)
+        {
+            uint count = 0;
+
+            foreach (byte b in array)
+            {
+                WriteByte(b, dest + count);
+
+                ++count;
+            }
+        }
+
+        public byte ReadByte(uint dest)
+        {
+            ComputeLast(dest);
+
+            dest -= (uint)Last.Start;
+            return (Last.Memory[dest]);
+        }
+
+        public byte[] ReadBytes(uint dest, int length)
+        {
+            int count = 0;
+            byte[] array = new byte[length];
+
+            while (count < length)
+            {
+                array[count] = ReadByte(dest + (uint) count);
+                ++count;
+            }
+
+            return (array);
+        }
+
+        public uint ReadPtr(uint dest)
+        {
+            byte[] b = ReadBytes(dest, Defines.SIZE_PTR);
+
+            return (BitConverter.ToUInt32(b));
         }
     }
 }

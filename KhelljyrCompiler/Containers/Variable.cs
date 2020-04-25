@@ -88,4 +88,29 @@ namespace KhelljyrCompiler.Containers
             Size = Defines.SIZE_FLOAT;
         }
     }
+
+    public class PtrVariable : Variable<int>
+    {
+        public PtrVariable() : base(TypeFlag.Int)
+        {
+            Size = Defines.SIZE_PTR;
+        }
+    }
+
+    public class ConstPtrVariable : ConstVariable<int>
+    {
+        public ConstPtrVariable(int value) : base(value, TypeFlag.Int)
+        {
+            Size = Defines.SIZE_PTR;
+        }
+    }
+
+    public class DereferencedPointer : Variable<int>
+    {
+        public DereferencedPointer(int value) : base(TypeFlag.Int)
+        {
+            Value = value;
+            Size = Defines.SIZE_PTR;
+        }
+    }
 }

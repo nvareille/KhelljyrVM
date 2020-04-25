@@ -12,7 +12,31 @@ namespace KhelljyrCommon.OPCalls
             int size = reader.NextInt();
             byte[] toCopy = reader.NextArray(size);
 
+            if (proc.Registers.PtrCarry)
+            {
+                int a = BitConverter.ToInt32(toCopy) + proc.ActiveStackContainer.Memory.Start;
+
+                toCopy = BitConverter.GetBytes(a);
+                proc.Registers.PtrCarry = false;
+            }
+
             Array.Copy(toCopy, 0, proc.ActiveStackContainer.Memory.Memory, ptr, size);
+
+            return (reader.Elapsed());
+        }
+
+        public static int AssignToPointer(Processor proc, ProgramReader reader)
+        {
+            uint source = reader.NextPtr();
+            int size = reader.NextInt();
+            uint dest = reader.NextPtr();
+            byte[] toCopy = new byte[size];
+
+            dest = proc.MMU.ReadPtr(dest);
+
+            Array.Copy(proc.ActiveStackContainer.Memory.Memory, source, toCopy, 0, size);
+
+            proc.MMU.WriteBytes(toCopy, dest);
 
             return (reader.Elapsed());
         }
@@ -88,6 +112,13 @@ namespace KhelljyrCommon.OPCalls
             int flag = reader.NextInt();
 
             proc.Registers.TypeRegisters[id] = (TypeFlag) flag;
+            return (reader.Elapsed());
+        }
+
+        public static int AssignPtrCarry(Processor proc, ProgramReader reader)
+        {
+            proc.Registers.PtrCarry = true;
+
             return (reader.Elapsed());
         }
     }

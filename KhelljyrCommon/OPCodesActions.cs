@@ -16,8 +16,11 @@ namespace KhelljyrCommon
             {OPCodes.Codes.VarConstCopy, OPCalls.Functions.VarConstCopy},
 
             {OPCodes.Codes.AssignStatic, OPCalls.Memset.AssignStatic},
+            {OPCodes.Codes.AssignToPointer, OPCalls.Memset.AssignToPointer},
             {OPCodes.Codes.AssignReturnCarry, OPCalls.Memset.AssignReturnCarry},
             {OPCodes.Codes.SetReturnCarry, OPCalls.Memset.SetReturnCarry},
+            {OPCodes.Codes.AssignPtrCarry, OPCalls.Memset.AssignPtrCarry},
+
             {OPCodes.Codes.AssignOperationRegister, OPCalls.Memset.AssignOperationRegister},
             {OPCodes.Codes.AssignConstOperationRegister, OPCalls.Memset.AssignConstOperationRegister},
             {OPCodes.Codes.AssignConditionRegister, OPCalls.Memset.AssignConditionRegister},
@@ -40,7 +43,8 @@ namespace KhelljyrCommon
 
             {OPCodes.Codes.Jump, OPCalls.Jumps.Jump},
 
-            {OPCodes.Codes.Exit, OPCalls.SysCalls.Exit}
+            {OPCodes.Codes.Exit, OPCalls.SysCalls.Exit},
+            {OPCodes.Codes.Brk, OPCalls.SysCalls.Brk}
         };
     }
 }

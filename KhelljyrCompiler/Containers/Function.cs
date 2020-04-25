@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace KhelljyrCompiler.Containers
@@ -18,6 +19,23 @@ namespace KhelljyrCompiler.Containers
         {
             v.ComputeAddress(this);
             Variables.Add(v);
+        }
+
+        public Variable GetVariable(string name)
+        {
+            bool isPtr = name.StartsWith("&");
+            bool mustDeref = name.StartsWith("*");
+
+            name = name.Replace("&", "");
+            name = name.Replace("*", "");
+            Variable v = Variables.First(a => a.Name == name);
+
+            if (mustDeref)
+                return (new DereferencedPointer(v.Address));
+            if (!isPtr)
+                return (v);
+            
+            return (new ConstPtrVariable(v.Address));
         }
     }
 }

@@ -1,0 +1,13 @@
+fct transform a
+	int b 42
+	
+	set *a b
+	
+	ret 0
+
+fct main
+	int a 0
+	
+	call transform &a
+	
+	ret a

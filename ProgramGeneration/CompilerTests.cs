@@ -103,6 +103,18 @@ namespace ProgramGeneration
         }
 
         [TestMethod]
+        public void BasicPtr()
+        {
+            Assert.AreEqual(42, TestFile("Samples/BasicPtr.txt"));
+        }
+
+        [TestMethod]
+        public void AdvancedPtr()
+        {
+            Assert.AreEqual(42, TestFile("Samples/AdvancedPtr.txt"));
+        }
+
+        [TestMethod]
         public void BasicTest()
         {
             Assert.AreEqual(42, TestFile("Samples/Test.txt"));

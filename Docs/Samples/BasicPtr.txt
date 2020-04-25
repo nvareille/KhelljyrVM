@@ -1,0 +1,13 @@
+fct main
+	int a 42
+	int b 43
+	ptr c
+
+	set c &a
+	add c 4 c
+	
+	set *c a
+	
+	brk
+	
+	ret b

@@ -7,6 +7,7 @@ namespace KhelljyrCommon
     public class Registers
     {
         public bool JumpCarry;
+        public bool PtrCarry;
         public byte[] ReturnCarry = new byte[Defines.SIZE_PTR];
         public TypeFlag[] TypeRegisters = new TypeFlag[2];
         public byte[][] OperationRegisters = new byte[][]

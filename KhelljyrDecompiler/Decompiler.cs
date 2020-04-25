@@ -85,14 +85,18 @@ namespace KhelljyrDecompiler
             {OPCodes.Codes.VarConstCopy, new ArgumentType[] {new Int(), new Array(0), new Ptr() }},
 
             {OPCodes.Codes.AssignStatic, new ArgumentType[] {new Ptr(), new Int(), new Array(1) }},
+            {OPCodes.Codes.AssignToPointer, new ArgumentType[] {new Ptr(), new Int(), new Ptr() }},
             {OPCodes.Codes.AssignReturnCarry, new ArgumentType[] {new Ptr(), new Int() }},
             {OPCodes.Codes.SetReturnCarry, new ArgumentType[] {new Int(), new Array(0) }},
+            {OPCodes.Codes.AssignPtrCarry, new ArgumentType[] {}},
+
             {OPCodes.Codes.AssignOperationRegister, new ArgumentType[] {new Int(), new Int(), new Ptr() }},
             {OPCodes.Codes.AssignConstOperationRegister, new ArgumentType[] {new Int(), new Int(), new Array(1) }},
             {OPCodes.Codes.AssignConditionRegister, new ArgumentType[] {new Int(), new Ptr() }},
             {OPCodes.Codes.AssignStaticConditionRegister, new ArgumentType[] {new Int(), new Int() }},
             {OPCodes.Codes.AssignTypeRegister, new ArgumentType[] {new Int(), new TypeFlag() }},
 
+            {OPCodes.Codes.Cast, new ArgumentType[] {new TypeFlag(), new Ptr() }},
             {OPCodes.Codes.OperationAdd, new ArgumentType[] {new Int(), new Ptr() }},
             /*{OPCodes.Codes.OperationLess, new ArgumentType[] {new Ptr(), new Ptr(), new Ptr() }},
             {OPCodes.Codes.OperationLessConst, new ArgumentType[] {new Ptr(), new Int(), new Ptr() }},
@@ -107,6 +111,8 @@ namespace KhelljyrDecompiler
             {OPCodes.Codes.Ifn, new ArgumentType[] {new ConditionFlag(), new Ptr()}},
 
             {OPCodes.Codes.Jump, new ArgumentType[] {new Ptr(), }},
+
+            { OPCodes.Codes.Brk, new ArgumentType[] {}},
         };
 
 

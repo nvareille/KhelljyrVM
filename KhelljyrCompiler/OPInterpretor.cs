@@ -15,6 +15,7 @@ namespace KhelljyrCompiler
             // Types Scalaires
             {"int", Int},
             {"float", Float},
+            {"ptr", Ptr},
 
             // Declareurs
             {"fct", Function},
@@ -33,13 +34,39 @@ namespace KhelljyrCompiler
             {"if", If},
 
             // Jumps
-            {"jmp", Jump}
+            {"jmp", Jump},
+
+            {"brk", BasicInstruction(new GenericInstruction(OPCodes.Codes.Brk))}
 
         };
 
         public void Treat(Compiler cmp, string[] args)
         {
             Fcts[args[0]](cmp, args);
+        }
+
+        private static Action<Compiler, string[]> BasicInstruction(Instruction ins)
+        {
+            Action<Compiler, string[]> act = (cmp, args) =>
+            {
+                Function fct = cmp.Functions.Last();
+
+                fct.Instructions.Add(ins);
+            };
+
+            return (act);
+        }
+
+        private static void Ptr(Compiler cmp, string[] args)
+        {
+            int value = 0;
+            Function fct = cmp.Functions.Last();
+            PtrVariable v = new PtrVariable
+            {
+                Name = args[1],
+            };
+
+            fct.AddVariable(v);
         }
 
         public static void Int(Compiler cmp, string[] args)
@@ -138,6 +165,39 @@ namespace KhelljyrCompiler
             fct.AddVariable(v);
         }
 
+        private static bool TryPtrSet(Function fct, Variable v, string stringValue)
+        {
+            Variable ptr = fct.GetVariable(stringValue);
+
+            if (v is DereferencedPointer)
+            {
+                SetWritePtrInstruction ins = new SetWritePtrInstruction
+                {
+                    Variable = ptr,
+                    Pointer = v as DereferencedPointer
+                };
+
+                fct.Instructions.Add(ins);
+
+                return (true);
+            }
+
+            if (ptr is ConstPtrVariable)
+            {
+                SetPtrInstruction ins = new SetPtrInstruction
+                {
+                    Variable = v,
+                    Value = ptr.As<ConstPtrVariable>().Value
+                };
+
+                fct.Instructions.Add(ins);
+
+                return (true);
+            }
+
+            return (false);
+        }
+
         private static bool TryConstSet(Function fct, Variable v, string stringValue)
         {
             int i = 0;
@@ -167,7 +227,7 @@ namespace KhelljyrCompiler
 
                 return (true);
             }
-            
+
             return (false);
         }
 
@@ -175,9 +235,17 @@ namespace KhelljyrCompiler
         {
             int value;
             Function fct = cmp.Functions.Last();
-            Variable v = fct.Variables.First(a => a.Name == args[1]);
-            
-            if (TryConstSet(fct, v, args[2])) { }
+            Variable v = fct.GetVariable(args[1]);
+
+            if (TryConstSet(fct, v, args[2]))
+            {
+
+            }
+            else if (TryPtrSet(fct, v, args[2]))
+            {
+
+            }
+
 /* TODO Casts && Copy
  else if ()
             {
@@ -191,7 +259,7 @@ namespace KhelljyrCompiler
 
                 while (count < args.Length)
                 {
-                    Variable a = fct.Variables.FirstOrDefault(n => n.Name == args[count]);
+                    Variable a = fct.GetVariable(args[count]);
 
                     if (a == null && Int32.TryParse(args[count], out value))
                         a = new ConstIntVariable(value);
@@ -295,7 +363,7 @@ namespace KhelljyrCompiler
             
             while (args.Length > count)
             {
-                Variable v = fct.Variables.FirstOrDefault(a => a.Name == args[count]);
+                Variable v = fct.GetVariable(args[count]);
 
                 if (v == null && Int32.TryParse(args[count], out value))
                 {
