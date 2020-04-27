@@ -55,6 +55,15 @@ namespace KhelljyrCommon
             return (value);
         }
 
+        public byte NextByte()
+        {
+            byte value = Program[Counter];
+
+            MoveCounter(Defines.SIZE_BYTE);
+
+            return (value);
+        }
+
         public uint NextPtr()
         {
             uint value = BitConverter.ToUInt32(Program, Counter);

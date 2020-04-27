@@ -1,25 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using KhelljyrCommon;
 
 namespace KhelljyrCompiler.Containers.Instructions
 {
-    public class RetCarryInstruction : Instruction
+    public class AssignTargetRegisterInstruction : Instruction
     {
+        private int Index;
         private Variable Variable;
 
-        public RetCarryInstruction(Variable v)
+        public AssignTargetRegisterInstruction(Variable v, int index)
         {
+            Index = index;
             Variable = v;
         }
 
         public override byte[] ByteOutput()
         {
-            Bytes.Add(OPCodes.Codes.AssignReturnCarry);
-            Bytes.Add(Variable.Address);
-            Bytes.Add(Variable.Size);
+            Bytes.Add(OPCodes.Codes.AssignTargetRegister);
+            Bytes.Add(Index);
+            Bytes.Add(Variable.Target);
 
             return (Bytes.Convert());
         }

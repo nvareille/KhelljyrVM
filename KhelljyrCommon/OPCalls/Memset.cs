@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using KhelljyrCommon.MemoryOperators;
 
 namespace KhelljyrCommon.OPCalls
 {
@@ -65,10 +66,12 @@ namespace KhelljyrCommon.OPCalls
         {
             int id = reader.NextInt();
             int size = reader.NextInt();
-            uint ptr = reader.NextPtr();
+            byte[] ptr = reader.NextArray(Defines.SIZE_PTR);
             byte[] reg = new byte[size];
 
-            Array.Copy(proc.ActiveStackContainer.Memory.Memory, ptr, reg, 0, size);
+            MemoryReader r = MemoryReader.GetReader(id, proc, ptr, Defines.SIZE_PTR);
+
+            Array.Copy(r.Data, 0, reg, 0, size);
 
             proc.Registers.OperationRegisters[id] = reg;
 
@@ -115,10 +118,33 @@ namespace KhelljyrCommon.OPCalls
             return (reader.Elapsed());
         }
 
+        public static int AssignTargetRegister(Processor proc, ProgramReader reader)
+        {
+            int id = reader.NextInt();
+            byte flag = reader.NextByte();
+
+            proc.Registers.TargetRegisters[id] = (TargetFlag)flag;
+            return (reader.Elapsed());
+        }
+
         public static int AssignPtrCarry(Processor proc, ProgramReader reader)
         {
             proc.Registers.PtrCarry = true;
 
+            return (reader.Elapsed());
+        }
+
+        public static int Set(Processor proc, ProgramReader reader)
+        {
+            int sourceSize = reader.NextInt();
+            byte[] source = reader.NextArray(sourceSize);
+            uint dest = reader.NextPtr();
+            
+            MemoryReader r = MemoryReader.GetReader(0, proc, source, sourceSize);
+            MemoryWriter w = MemoryWriter.GetWriter(1, proc, dest);
+            
+            w.Write(r.Data);
+            
             return (reader.Elapsed());
         }
     }

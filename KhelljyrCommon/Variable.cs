@@ -14,15 +14,22 @@ namespace KhelljyrCompiler.Containers
         public int Size;
         public bool HaveValue;
         public TypeFlag Type;
+        public TargetFlag Target;
 
-        protected Variable(TypeFlag flag)
+        protected Variable(TypeFlag flag, TargetFlag target)
         {
             Type = flag;
+            Target = target;
         }
 
         public void ComputeAddress(Function fct)
         {
             Address = fct.Variables.Sum(i => i.Size);
+        }
+
+        public virtual byte[] GetAddressOrValue()
+        {
+            return (BitConverter.GetBytes(Address));
         }
     }
 
@@ -30,7 +37,7 @@ namespace KhelljyrCompiler.Containers
     {
         public T Value;
 
-        protected Variable(TypeFlag flag) : base(flag) { }
+        protected Variable(TypeFlag flag, TargetFlag target) : base(flag, target) { }
     }
 
     public interface IConstVariable
@@ -40,7 +47,7 @@ namespace KhelljyrCompiler.Containers
 
     public abstract class ConstVariable<T> : Variable<T>, IConstVariable
     {
-        protected ConstVariable(T value, TypeFlag flag) : base(flag)
+        protected ConstVariable(T value, TypeFlag flag) : base(flag, TargetFlag.Const)
         {
             HaveValue = true;
             Value = value;
@@ -59,7 +66,7 @@ namespace KhelljyrCompiler.Containers
 
     public class IntVariable : Variable<int>
     {
-        public IntVariable() : base(TypeFlag.Int)
+        public IntVariable() : base(TypeFlag.Int, TargetFlag.Address)
         {
             Size = Defines.SIZE_INT;
         }
@@ -75,7 +82,7 @@ namespace KhelljyrCompiler.Containers
 
     public class FloatVariable : Variable<float>
     {
-        public FloatVariable() : base(TypeFlag.Float)
+        public FloatVariable() : base(TypeFlag.Float, TargetFlag.Address)
         {
             Size = Defines.SIZE_FLOAT;
         }
@@ -91,15 +98,15 @@ namespace KhelljyrCompiler.Containers
 
     public class PtrVariable : Variable<int>
     {
-        public PtrVariable() : base(TypeFlag.Int)
+        public PtrVariable() : base(TypeFlag.Int, TargetFlag.Address)
         {
             Size = Defines.SIZE_PTR;
         }
     }
 
-    public class ConstPtrVariable : ConstVariable<int>
+    public class ConstPtrVariable : ConstValue
     {
-        public ConstPtrVariable(int value) : base(value, TypeFlag.Int)
+        public ConstPtrVariable(int value) : base(value)
         {
             Size = Defines.SIZE_PTR;
         }
@@ -107,10 +114,39 @@ namespace KhelljyrCompiler.Containers
 
     public class DereferencedPointer : Variable<int>
     {
-        public DereferencedPointer(int value) : base(TypeFlag.Int)
+        public DereferencedPointer(int value) : base(TypeFlag.Int, TargetFlag.Ptr)
         {
-            Value = value;
+            Address = value;
             Size = Defines.SIZE_PTR;
+        }
+    }
+
+    public class ConstValue : Variable
+    {
+        public byte[] Value;
+
+        public ConstValue(object value) : base(TypeFlag.Unknown, TargetFlag.Const)
+        {
+            if (value is float)
+            {
+                Value = BitConverter.GetBytes((float) value);
+                Size = Defines.SIZE_FLOAT;
+            }
+            else if (value is int)
+            {
+                Value = BitConverter.GetBytes((int) value);
+                Size = Defines.SIZE_INT;
+            }
+            else if (value is char)
+            {
+                Value = BitConverter.GetBytes((char) value);
+                Size = Defines.SIZE_BYTE;
+            }
+        }
+
+        public override byte[] GetAddressOrValue()
+        {
+            return (Value);
         }
     }
 }

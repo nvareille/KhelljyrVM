@@ -4,11 +4,10 @@ using System.Text;
 
 namespace KhelljyrCommon
 {
-    public enum TypeFlag : int
+    public enum TargetFlag : byte
     {
-        Unknown,
-        Char,
-        Int,
-        Float,
+        Const,
+        Address,
+        Ptr,
     }
 }

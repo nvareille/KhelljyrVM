@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using KhelljyrCommon.MemoryOperators;
 using Microsoft.VisualBasic.CompilerServices;
 
 namespace KhelljyrCommon.OPCalls
@@ -98,7 +99,9 @@ namespace KhelljyrCommon.OPCalls
 
             b = Convert(v1, returnType);
 
-            Array.Copy(b, 0, proc.ActiveStackContainer.Memory.Memory, addr, b.Length);
+            MemoryWriter w = MemoryWriter.GetWriter(2, proc, addr);
+
+            w.Write(b);
 
             return (reader.Elapsed());
         }
@@ -130,7 +133,9 @@ namespace KhelljyrCommon.OPCalls
 
             b = Convert(v1, returnType);
 
-            Array.Copy(b, 0, proc.ActiveStackContainer.Memory.Memory, addr, b.Length);
+            MemoryWriter w = MemoryWriter.GetWriter(2, proc, addr);
+
+            w.Write(b);
 
             return (reader.Elapsed());
         }

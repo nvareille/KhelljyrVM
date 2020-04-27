@@ -16,24 +16,22 @@ namespace KhelljyrCompiler.Containers.Instructions
 
         public override byte[] ByteOutput()
         {
-            List<byte[]> bytes = new List<byte[]>();
-
             if (Variable is IConstVariable)
             {
-                bytes.Add(GetBytes(OPCodes.Codes.SetReturnCarry));
-                bytes.Add(GetBytes(Variable.Size));
-                bytes.Add(Variable.As<IConstVariable>().GetValueAsBytes());
+                Bytes.Add(OPCodes.Codes.SetReturnCarry);
+                Bytes.Add(Variable.Size);
+                Bytes.Add(Variable.As<IConstVariable>().GetValueAsBytes());
             }
             else
             {
-                bytes.Add(GetBytes(OPCodes.Codes.Ret));
-                bytes.Add(GetBytes(Variable.Address));
-                bytes.Add(GetBytes(Defines.SIZE_INT));
+                Bytes.Add(OPCodes.Codes.Ret);
+                Bytes.Add(Variable.Address);
+                Bytes.Add(Defines.SIZE_INT);
             }
 
-            bytes.Add(GetBytes(OPCodes.Codes.FctPop));
+            Bytes.Add(OPCodes.Codes.FctPop);
 
-            return (Convert(bytes));
+            return (Bytes.Convert());
         }
     }
 }

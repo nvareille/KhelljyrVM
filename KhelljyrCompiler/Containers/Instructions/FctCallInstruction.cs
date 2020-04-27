@@ -18,35 +18,34 @@ namespace KhelljyrCompiler.Containers.Instructions
         public override byte[] ByteOutput()
         {
             int addr = 0;
-            List<byte[]> bytes = new List<byte[]>();
 
-            bytes.Add(GetBytes(OPCodes.Codes.FctPrepare));
-            bytes.Add(GetBytes(Fct.Id));
+            Bytes.Add(OPCodes.Codes.FctPrepare);
+            Bytes.Add(Fct.Id);
 
             // arguments à gérer
             foreach (Variable variable in Variables)
             {
                 if (variable is IConstVariable)
                 {
-                    bytes.Add(GetBytes(OPCodes.Codes.VarConstCopy));
-                    bytes.Add(GetBytes(variable.Size));
-                    bytes.Add(variable.As<IConstVariable>().GetValueAsBytes());
-                    bytes.Add(GetBytes(addr));
+                    Bytes.Add(OPCodes.Codes.VarConstCopy);
+                    Bytes.Add(variable.Size);
+                    Bytes.Add(variable.As<IConstVariable>().GetValueAsBytes());
+                    Bytes.Add(addr);
                 }
                 else
                 {
-                    bytes.Add(GetBytes(OPCodes.Codes.VarFctCopy));
-                    bytes.Add(GetBytes(variable.Size));
-                    bytes.Add(GetBytes(variable.Address));
-                    bytes.Add(GetBytes(addr));
+                    Bytes.Add(OPCodes.Codes.VarFctCopy);
+                    Bytes.Add(variable.Size);
+                    Bytes.Add(variable.Address);
+                    Bytes.Add(addr);
                 }
 
                 addr += variable.Size;
             }
 
-            bytes.Add(GetBytes(OPCodes.Codes.FctStart));
+            Bytes.Add(OPCodes.Codes.FctStart);
             
-            return (Convert(bytes));
+            return (Bytes.Convert());
         }
     }
 }

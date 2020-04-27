@@ -20,12 +20,10 @@ namespace KhelljyrCompiler.Containers.Instructions
 
         public override byte[] ByteOutput()
         {
-            List<byte[]> bytes = new List<byte[]>();
-            
-            bytes.Add(GetBytes(OPCodes.Codes.Jump));
-            bytes.Add(GetBytes(0));
+            Bytes.Add(OPCodes.Codes.Jump);
+            Bytes.Add(0);
 
-            return (Convert(bytes));
+            return (Bytes.Convert());
         }
     }
 }

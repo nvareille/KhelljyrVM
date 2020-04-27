@@ -23,6 +23,8 @@ namespace KhelljyrCommon
             new byte[Defines.SIZE_INT],
         };
 
+        public TargetFlag[] TargetRegisters = new TargetFlag[5];
+
         public void SetReturnCarry(byte[] array, uint idx, int size)
         {
             Array.Copy(array, idx, ReturnCarry, 0, size);

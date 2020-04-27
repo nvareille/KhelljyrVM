@@ -34,6 +34,10 @@ namespace KhelljyrCompiler.Containers.Instructions
         {
             List<byte[]> bytes = new List<byte[]>();
 
+            Bytes.Add(new AssignTargetRegisterInstruction(From[0], 0));
+            Bytes.Add(new AssignTargetRegisterInstruction(From[1], 1));
+            Bytes.Add(new AssignTargetRegisterInstruction(To, 2));
+
             Bytes.Add(OPCodes.Codes.AssignTypeRegister);
             Bytes.Add(0);
             Bytes.Add(From[0].Type);

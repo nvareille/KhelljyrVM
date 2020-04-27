@@ -13,37 +13,31 @@ namespace KhelljyrCompiler.Containers.Instructions
 
         public override byte[] ByteOutput()
         {
-            List<byte[]> bytes = new List<byte[]>();
-
-            bytes.Add(TreatVariable(V1, 0));
-            bytes.Add(TreatVariable(V2, 1));
+            TreatVariable(V1, 0);
+            TreatVariable(V2, 1);
             
-            bytes.Add(GetBytes(OPCodes.Codes.Ifn));
-            bytes.Add(GetBytes((int)Flag));
+            Bytes.Add(OPCodes.Codes.Ifn);
+            Bytes.Add((int)Flag);
 
-            bytes.Add(GetBytes(0));
+            Bytes.Add(0);
 
-            return (Convert(bytes));
+            return (Bytes.Convert());
         }
 
-        private byte[] TreatVariable(Variable v, int id)
+        private void TreatVariable(Variable v, int id)
         {
-            List<byte[]> bytes = new List<byte[]>();
-
             if (v is IConstVariable)
             {
-                bytes.Add(GetBytes(OPCodes.Codes.AssignStaticConditionRegister));
-                bytes.Add(GetBytes(id));
-                bytes.Add(v.As<IConstVariable>().GetValueAsBytes());
+                Bytes.Add(OPCodes.Codes.AssignStaticConditionRegister);
+                Bytes.Add(id);
+                Bytes.Add(v.As<IConstVariable>().GetValueAsBytes());
             }
             else
             {
-                bytes.Add(GetBytes(OPCodes.Codes.AssignConditionRegister));
-                bytes.Add(GetBytes(id));
-                bytes.Add(GetBytes(v.Address));
+                Bytes.Add(OPCodes.Codes.AssignConditionRegister);
+                Bytes.Add(id);
+                Bytes.Add(v.Address);
             }
-
-            return (Convert(bytes));
         }
 
         public override int LocalAddressToWrite()

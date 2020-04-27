@@ -15,6 +15,8 @@ namespace ProgramGeneration
     {
         public int TestFile(string file, IEnumerable<string> preprocessor = null)
         {
+            File.Copy("../../../../Docs/" + file, file, true);
+            
             string outputName = file.Split('/').Last().Split('.').First();
             Compiler c = new Compiler();
             Decompiler decompiler = new Decompiler();
@@ -106,6 +108,12 @@ namespace ProgramGeneration
         public void BasicPtr()
         {
             Assert.AreEqual(42, TestFile("Samples/BasicPtr.txt"));
+        }
+
+        [TestMethod]
+        public void AddFromPtr()
+        {
+            Assert.AreEqual(42, TestFile("Samples/AddFromPtr.txt"));
         }
 
         [TestMethod]

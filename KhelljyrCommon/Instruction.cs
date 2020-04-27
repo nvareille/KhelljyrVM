@@ -14,20 +14,20 @@ namespace KhelljyrCompiler.Containers
 
         public abstract byte[] ByteOutput();
 
-        protected byte[] Convert(List<byte[]> bytes)
+        /*protected byte[] Convert(List<byte[]> bytes)
         {
             return (bytes.SelectMany(i => i).ToArray());
-        }
+        }*/
 
-        protected byte[] GetBytes(OPCodes.Codes c)
+        /*protected byte[] GetBytes(OPCodes.Codes c)
         {
             return (BitConverter.GetBytes((int) c));
-        }
+        }*/
 
-        protected byte[] GetBytes(int c)
+        /*protected byte[] GetBytes(int c)
         {
             return (BitConverter.GetBytes(c));
-        }
+        }*/
 
         public byte[] ByteOutputInternal(int idx)
         {

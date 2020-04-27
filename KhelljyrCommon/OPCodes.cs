@@ -15,6 +15,8 @@ namespace KhelljyrCommon
             VarFctCopy,
             VarConstCopy,
 
+            Set,
+
             AssignStatic,
             AssignToPointer,
             AssignReturnCarry,
@@ -26,6 +28,7 @@ namespace KhelljyrCommon
             AssignConditionRegister,
             AssignStaticConditionRegister,
             AssignTypeRegister,
+            AssignTargetRegister,
 
             Cast,
             OperationAdd,

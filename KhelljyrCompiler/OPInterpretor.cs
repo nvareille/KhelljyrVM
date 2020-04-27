@@ -66,6 +66,17 @@ namespace KhelljyrCompiler
                 Name = args[1],
             };
 
+            if (args.Length == 3)
+            {
+                Variable assign = fct.GetVariable(args[2]);
+
+                fct.Instructions.Insert(0, new NewSetInstruction
+                {
+                    Destination = v,
+                    Source = assign
+                });
+            }
+
             fct.AddVariable(v);
         }
 
@@ -83,10 +94,10 @@ namespace KhelljyrCompiler
                 v.HaveValue = true;
                 v.Value = value;
 
-                fct.Instructions.Insert(0, new SetIntInstruction
+                fct.Instructions.Insert(0, new NewSetInstruction
                 {
-                    Variable = v,
-                    Value = v.Value
+                    Destination = v,
+                    Source = new ConstValue(v.Value)
                 });
             }
             else if (args.Length >= 3)
@@ -131,10 +142,10 @@ namespace KhelljyrCompiler
                 v.HaveValue = true;
                 v.Value = value;
 
-                fct.Instructions.Insert(0, new SetFloatInstruction
+                fct.Instructions.Insert(0, new NewSetInstruction
                 {
-                    Variable = v,
-                    Value = v.Value
+                    Destination = v,
+                    Source = new ConstValue(v.Value)
                 });
             }
             else if (args.Length >= 3)
@@ -171,10 +182,10 @@ namespace KhelljyrCompiler
 
             if (v is DereferencedPointer)
             {
-                SetWritePtrInstruction ins = new SetWritePtrInstruction
+                NewSetInstruction ins = new NewSetInstruction
                 {
-                    Variable = ptr,
-                    Pointer = v as DereferencedPointer
+                    Destination = v,
+                    Source = ptr
                 };
 
                 fct.Instructions.Add(ins);
@@ -184,10 +195,10 @@ namespace KhelljyrCompiler
 
             if (ptr is ConstPtrVariable)
             {
-                SetPtrInstruction ins = new SetPtrInstruction
+                NewSetInstruction ins = new NewSetInstruction
                 {
-                    Variable = v,
-                    Value = ptr.As<ConstPtrVariable>().Value
+                    Destination = v,
+                    Source = ptr
                 };
 
                 fct.Instructions.Add(ins);
@@ -205,10 +216,10 @@ namespace KhelljyrCompiler
 
             if (v.Type == TypeFlag.Float && Single.TryParse(stringValue, out f))
             {
-                SetFloatInstruction ins = new SetFloatInstruction
+                NewSetInstruction ins = new NewSetInstruction
                 {
-                    Variable = v,
-                    Value = f
+                    Destination = v,
+                    Source = new ConstValue(f)
                 };
 
                 fct.Instructions.Add(ins);
@@ -217,10 +228,10 @@ namespace KhelljyrCompiler
             }
             if (v.Type == TypeFlag.Int && Int32.TryParse(stringValue, out i))
             {
-                SetIntInstruction ins = new SetIntInstruction
+                NewSetInstruction ins = new NewSetInstruction
                 {
-                    Variable = v,
-                    Value = i
+                    Destination = v,
+                    Source = new ConstValue(i)
                 };
 
                 fct.Instructions.Add(ins);
@@ -291,8 +302,8 @@ namespace KhelljyrCompiler
         {
             Function fct = cmp.Functions.Last();
 
-            Variable v1 = fct.Variables.First(a => a.Name == args[1]);
-            Variable v2 = fct.Variables.FirstOrDefault(a => a.Name == args[2]) ?? TryConst(args[2]);
+            Variable v1 = fct.GetVariable(args[1]);
+            Variable v2 = fct.GetVariable(args[2]) ?? TryConst(args[2]);
 
             AddInstruction i = new AddInstruction
             {
@@ -301,7 +312,7 @@ namespace KhelljyrCompiler
                     v1,
                     v2
                 },
-                To = fct.Variables.First(a => a.Name == args[3])
+                To = fct.GetVariable(args[3])
             };
 
             fct.Instructions.Add(i);

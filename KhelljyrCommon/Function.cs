@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using KhelljyrCompiler.Containers;
 
-namespace KhelljyrCompiler.Containers
+namespace KhelljyrCommon
 {
     public class Function
     {
@@ -28,8 +27,10 @@ namespace KhelljyrCompiler.Containers
 
             name = name.Replace("&", "");
             name = name.Replace("*", "");
-            Variable v = Variables.First(a => a.Name == name);
+            Variable v = Variables.FirstOrDefault(a => a.Name == name);
 
+            if (v == null)
+                return (null);
             if (mustDeref)
                 return (new DereferencedPointer(v.Address));
             if (!isPtr)

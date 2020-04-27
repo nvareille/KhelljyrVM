@@ -12,13 +12,12 @@ namespace KhelljyrCompiler.Containers.Instructions
 
         public override byte[] ByteOutput()
         {
-            List<byte[]> bytes = new List<byte[]>();
             FctCallRetInstruction i = new FctCallRetInstruction(FunctionToCall);
 
             i.Variables = Variables;
-            bytes.Add(i.ByteOutput());
+            Bytes.Add(i.ByteOutput());
 
-            return (Convert(bytes));
+            return (Bytes.Convert());
         }
     }
 }

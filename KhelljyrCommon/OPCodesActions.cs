@@ -15,17 +15,20 @@ namespace KhelljyrCommon
             {OPCodes.Codes.VarFctCopy, OPCalls.Functions.VarFctCopy},
             {OPCodes.Codes.VarConstCopy, OPCalls.Functions.VarConstCopy},
 
+            {OPCodes.Codes.Set, OPCalls.Memset.Set},
+
             {OPCodes.Codes.AssignStatic, OPCalls.Memset.AssignStatic},
             {OPCodes.Codes.AssignToPointer, OPCalls.Memset.AssignToPointer},
             {OPCodes.Codes.AssignReturnCarry, OPCalls.Memset.AssignReturnCarry},
             {OPCodes.Codes.SetReturnCarry, OPCalls.Memset.SetReturnCarry},
             {OPCodes.Codes.AssignPtrCarry, OPCalls.Memset.AssignPtrCarry},
-
+            
             {OPCodes.Codes.AssignOperationRegister, OPCalls.Memset.AssignOperationRegister},
             {OPCodes.Codes.AssignConstOperationRegister, OPCalls.Memset.AssignConstOperationRegister},
             {OPCodes.Codes.AssignConditionRegister, OPCalls.Memset.AssignConditionRegister},
             {OPCodes.Codes.AssignStaticConditionRegister, OPCalls.Memset.AssignStaticConditionRegister},
             {OPCodes.Codes.AssignTypeRegister, OPCalls.Memset.AssignTypeRegister},
+            {OPCodes.Codes.AssignTargetRegister, OPCalls.Memset.AssignTargetRegister},
 
             {OPCodes.Codes.Cast, OPCalls.Arithmetics.Cast},
             {OPCodes.Codes.OperationAdd, OPCalls.Arithmetics.Add},

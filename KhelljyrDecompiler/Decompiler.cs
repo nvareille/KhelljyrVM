@@ -7,6 +7,11 @@ using KhelljyrCompiler;
 
 namespace KhelljyrDecompiler
 {
+    public class Byte : ArgumentType
+    {
+        public Byte() : base(Defines.SIZE_BYTE) { }
+    }
+
     public class Int : ArgumentType
     {
         public Int() : base(Defines.SIZE_INT) { }
@@ -39,6 +44,16 @@ namespace KhelljyrDecompiler
         public string GetFlag(int id)
         {
             return (Enum.GetName(typeof(KhelljyrCommon.TypeFlag), id));
+        }
+    }
+
+    public class TargetFlag : ArgumentType
+    {
+        public TargetFlag() : base(Defines.SIZE_BYTE) { }
+
+        public string GetFlag(int id)
+        {
+            return (Enum.GetName(typeof(KhelljyrCommon.TargetFlag), id));
         }
     }
 
@@ -84,6 +99,8 @@ namespace KhelljyrDecompiler
             {OPCodes.Codes.VarFctCopy, new ArgumentType[] {new Int(), new Ptr(), new Ptr()}},
             {OPCodes.Codes.VarConstCopy, new ArgumentType[] {new Int(), new Array(0), new Ptr() }},
 
+            {OPCodes.Codes.Set, new ArgumentType[] {new Int(), new Array(0), new Ptr() }},
+
             {OPCodes.Codes.AssignStatic, new ArgumentType[] {new Ptr(), new Int(), new Array(1) }},
             {OPCodes.Codes.AssignToPointer, new ArgumentType[] {new Ptr(), new Int(), new Ptr() }},
             {OPCodes.Codes.AssignReturnCarry, new ArgumentType[] {new Ptr(), new Int() }},
@@ -95,6 +112,7 @@ namespace KhelljyrDecompiler
             {OPCodes.Codes.AssignConditionRegister, new ArgumentType[] {new Int(), new Ptr() }},
             {OPCodes.Codes.AssignStaticConditionRegister, new ArgumentType[] {new Int(), new Int() }},
             {OPCodes.Codes.AssignTypeRegister, new ArgumentType[] {new Int(), new TypeFlag() }},
+            {OPCodes.Codes.AssignTargetRegister, new ArgumentType[] {new Int(), new TargetFlag() }},
 
             {OPCodes.Codes.Cast, new ArgumentType[] {new TypeFlag(), new Ptr() }},
             {OPCodes.Codes.OperationAdd, new ArgumentType[] {new Int(), new Ptr() }},
@@ -112,7 +130,7 @@ namespace KhelljyrDecompiler
 
             {OPCodes.Codes.Jump, new ArgumentType[] {new Ptr(), }},
 
-            { OPCodes.Codes.Brk, new ArgumentType[] {}},
+            {OPCodes.Codes.Brk, new ArgumentType[] {}},
         };
 
 
@@ -179,6 +197,9 @@ namespace KhelljyrDecompiler
 
                 if (i is TypeFlag)
                     args.Add(i.As<TypeFlag>().GetFlag(BitConverter.ToInt32(bytes)));
+
+                if (i is TargetFlag)
+                    args.Add(i.As<TargetFlag>().GetFlag(bytes[0]));
             }
 
             return (args);

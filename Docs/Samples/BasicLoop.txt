@@ -1,8 +1,11 @@
 fct main
+	ptr p
 	int a
 	
+	set p &a
+	
 	lbl loop
-		add a 1 a
-		if a < 10 loop
+		add *p 1 a
+		if *p < 10 loop
 		
 	ret a
