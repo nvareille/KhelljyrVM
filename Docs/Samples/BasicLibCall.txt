@@ -1,0 +1,7 @@
+fct main
+	int a
+	
+	call KhelljyrIO Test 42 42 0
+	set a KhelljyrIO Test 42 42 42
+	
+	ret a

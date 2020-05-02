@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using KhelljyrCommon;
+using KhelljyrCommon.Libraries;
 using KhelljyrCompiler.Containers;
 using KhelljyrCompiler.Containers.Instructions;
 
@@ -265,9 +266,10 @@ namespace KhelljyrCompiler
             else
             {
                 int count = 3;
-                Function target = cmp.Functions.First(n => n.Name == args[2]);
-                FctCallInstruction fci = new FctCallInstruction(target);
+                int startIdx = 2;
+                FctCallInstruction fci = FctCallInstruction.GetCallInstruction(cmp, args, ref startIdx);
 
+                count = startIdx + 1;
                 while (count < args.Length)
                 {
                     Variable a = fct.GetVariable(args[count]);
@@ -366,25 +368,14 @@ namespace KhelljyrCompiler
 
         public static void CallFct(Compiler cmp, string[] args)
         {
-            int count = 2;
+            int count = 0;
+            int startIdx = 1;
             int value = 0;
             Function fct = cmp.Functions.Last();
-            Function fctToCall = cmp.Functions.First(i => i.Name == args[1]);
-            FctCallInstruction c = new FctCallInstruction(fctToCall);
-            
-            while (args.Length > count)
-            {
-                Variable v = fct.GetVariable(args[count]);
+            FctCallInstruction c = FctCallInstruction.GetCallInstruction(cmp, args, ref startIdx);
 
-                if (v == null && Int32.TryParse(args[count], out value))
-                {
-                    v = new ConstIntVariable(value);
-                }
-
-                c.Variables.Add(v);
-                ++count;
-            }
-
+            count = startIdx + 1;
+            c.ExtractVariables(fct, args, count);
             fct.Instructions.Add(c);
         }
 

@@ -27,6 +27,12 @@ namespace KhelljyrDecompiler
         public Array(int idx) : base(0, idx) { }
     }
 
+    public class CharArray: ArgumentType
+    {
+        public CharArray(int idx) : base(0, idx) { }
+    }
+
+
     public class ConditionFlag : ArgumentType
     {
         public ConditionFlag() : base(Defines.SIZE_INT) { }
@@ -94,6 +100,7 @@ namespace KhelljyrDecompiler
         {
             {OPCodes.Codes.FctPrepare, new ArgumentType[] {new Int()}},
             {OPCodes.Codes.FctStart, new ArgumentType[] {}},
+            {OPCodes.Codes.LibCall, new ArgumentType[] {new Int(), new Int(), new Int(), new CharArray(1), new CharArray(2) }},
             {OPCodes.Codes.Ret, new ArgumentType[] {new Ptr(), new Int(), }},
             {OPCodes.Codes.FctPop, new ArgumentType[] {}},
             {OPCodes.Codes.VarFctCopy, new ArgumentType[] {new Int(), new Ptr(), new Ptr()}},
@@ -165,14 +172,24 @@ namespace KhelljyrDecompiler
                 {
                     bytes = Reader.NextArray(i.Size);
                     size = i.Size;
+
+                    try
+                    {
+                        read.Add(BitConverter.ToInt32(bytes));
+                    }
+                    catch (Exception e)
+                    {
+                        read.Add(-1);
+                    }
                 }
                 else
                 {
                     bytes = Reader.NextArray(read[i.Idx]);
                     size = read[i.Idx];
+                    read.Add(size);
                 }
 
-                read.Add(size);
+               
 
                 if (i is Int)
                     args.Add("INT[" + BitConverter.ToInt32(bytes) + "]");
@@ -190,6 +207,18 @@ namespace KhelljyrDecompiler
                     }
 
                     args.Add("ARRAY[" + String.Join(", ", strs) + "]");
+                }
+
+                if (i is CharArray)
+                {
+                    List<byte> strs = new List<byte>();
+
+                    foreach (byte b in bytes)
+                    {
+                        strs.Add(b);
+                    }
+
+                    args.Add("STRING[" + Encoding.ASCII.GetString(strs.ToArray()) + "]");
                 }
 
                 if (i is ConditionFlag)

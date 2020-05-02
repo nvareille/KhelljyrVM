@@ -29,5 +29,10 @@ namespace KhelljyrCommon
         {
             Array.Copy(array, idx, ReturnCarry, 0, size);
         }
+
+        public void SetReturnCarry(int value)
+        {
+            SetReturnCarry(BitConverter.GetBytes(value), 0, Defines.SIZE_INT);
+        }
     }
 }

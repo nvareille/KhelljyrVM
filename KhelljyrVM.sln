@@ -11,7 +11,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KhelljyrCommon", "KhelljyrC
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KhelljyrCompiler", "KhelljyrCompiler\KhelljyrCompiler.csproj", "{E03E4842-C4FE-4C12-B52A-78585D88C828}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KhelljyrDecompiler", "KhelljyrDecompiler\KhelljyrDecompiler.csproj", "{5FA6F3AE-695D-4F7E-A5A8-579612D3BFC6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KhelljyrDecompiler", "KhelljyrDecompiler\KhelljyrDecompiler.csproj", "{5FA6F3AE-695D-4F7E-A5A8-579612D3BFC6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KhelljyrLibrary", "KhelljyrLibrary\KhelljyrLibrary.csproj", "{452AE979-FF06-4E55-B0D5-F5C0038C7EDF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "STDLib", "STDLib\STDLib.csproj", "{C5449061-01B1-4E3B-91CD-4EB1B0167213}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libraries", "Libraries", "{63EF85E6-7DD7-4BB0-A827-6F9830C13AE8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,9 +45,20 @@ Global
 		{5FA6F3AE-695D-4F7E-A5A8-579612D3BFC6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5FA6F3AE-695D-4F7E-A5A8-579612D3BFC6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5FA6F3AE-695D-4F7E-A5A8-579612D3BFC6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{452AE979-FF06-4E55-B0D5-F5C0038C7EDF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{452AE979-FF06-4E55-B0D5-F5C0038C7EDF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{452AE979-FF06-4E55-B0D5-F5C0038C7EDF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{452AE979-FF06-4E55-B0D5-F5C0038C7EDF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C5449061-01B1-4E3B-91CD-4EB1B0167213}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C5449061-01B1-4E3B-91CD-4EB1B0167213}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C5449061-01B1-4E3B-91CD-4EB1B0167213}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C5449061-01B1-4E3B-91CD-4EB1B0167213}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{C5449061-01B1-4E3B-91CD-4EB1B0167213} = {63EF85E6-7DD7-4BB0-A827-6F9830C13AE8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A2C6EFB5-2065-48C6-BF83-CEDC1638F3DB}

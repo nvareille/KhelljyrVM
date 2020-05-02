@@ -13,15 +13,16 @@ namespace ProgramGeneration
     [TestClass]
     public class CompilerTests
     {
-        public int TestFile(string file, IEnumerable<string> preprocessor = null)
+        public int TestFile(string file, IEnumerable<string> preprocessor = null, Processor p = null)
         {
             File.Copy("../../../../Docs/" + file, file, true);
             
             string outputName = file.Split('/').Last().Split('.').First();
+            p = p ?? new Processor();
             Compiler c = new Compiler();
             Decompiler decompiler = new Decompiler();
-            Processor p = new Processor();
 
+            c.LibraryHandler = p.LibraryHandler;
             byte[] prog = null;
 
             if (preprocessor != null)
@@ -121,6 +122,13 @@ namespace ProgramGeneration
         {
             Assert.AreEqual(42, TestFile("Samples/AdvancedPtr.txt"));
         }
+
+        [TestMethod]
+        public void BasicLibCall()
+        {
+            Assert.AreEqual(126, TestFile("Samples/BasicLibCall.txt", null, LibrariesTest.PrepareLibraries()));
+        }
+
 
         [TestMethod]
         public void BasicTest()

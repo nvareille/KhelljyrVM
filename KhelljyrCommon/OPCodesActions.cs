@@ -10,6 +10,7 @@ namespace KhelljyrCommon
         {
             {OPCodes.Codes.FctPrepare, OPCalls.Functions.FunctionCall},
             {OPCodes.Codes.FctStart, OPCalls.Functions.FunctionStart},
+            {OPCodes.Codes.LibCall, OPCalls.Functions.LibCall},
             {OPCodes.Codes.Ret, OPCalls.Functions.Return},
             {OPCodes.Codes.FctPop, OPCalls.Functions.FunctionPop},
             {OPCodes.Codes.VarFctCopy, OPCalls.Functions.VarFctCopy},

@@ -10,6 +10,7 @@ namespace KhelljyrCommon
         {
             FctPrepare = 0,
             FctStart,
+            LibCall,
             Ret,
             FctPop,
             VarFctCopy,

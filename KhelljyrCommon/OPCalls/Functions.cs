@@ -25,6 +25,21 @@ namespace KhelljyrCommon.OPCalls
             return (reader.Elapsed());
         }
 
+        public static int LibCall(Processor proc, ProgramReader reader)
+        {
+            int size = reader.NextInt();
+            int libNameSize = reader.NextInt();
+            int fctNameSize = reader.NextInt();
+            byte[] lib = reader.NextArray(libNameSize);
+            byte[] fct = reader.NextArray(fctNameSize);
+            string l = Encoding.ASCII.GetString(lib);
+            string f = Encoding.ASCII.GetString(fct);
+
+            proc.FunctionToCall = new LibStackContainer(l, f, proc.MMU.Alloc(size));
+            
+            return (reader.Elapsed());
+        }
+
         public static int Return(Processor proc, ProgramReader reader)
         {
             uint ptr = reader.NextPtr();

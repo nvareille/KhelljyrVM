@@ -5,6 +5,7 @@ using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using KhelljyrCommon;
+using KhelljyrCommon.Libraries;
 using KhelljyrCompiler.Containers;
 using KhelljyrCompiler.Containers.Instructions;
 
@@ -13,11 +14,11 @@ namespace KhelljyrCompiler
     public class Compiler
     {
         public Preprocessor Preprocessor = new Preprocessor();
+        public LibraryHandler LibraryHandler = new LibraryHandler();
         public List<string> Builder = new List<string>();
         public List<string> Files = new List<string>();
-
         public List<Function> Functions = new List<Function>();
-
+        
         public void AddLines(string[] lines)
         {
             Builder.AddRange(lines);

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using KhelljyrCommon.Libraries;
 
 namespace KhelljyrCommon
 {
@@ -14,8 +15,13 @@ namespace KhelljyrCommon
         public Dictionary<int, int> Functions = new Dictionary<int, int>();
         public Registers Registers = new Registers();
         public MMU MMU = new MMU();
-
+        public LibraryHandler LibraryHandler;
         public bool Running;
+
+        public Processor()
+        {
+            LibraryHandler = new LibraryHandler(this);
+        }
 
         public void LoadProgram(byte[] prg)
         {
@@ -74,6 +80,14 @@ namespace KhelljyrCommon
             Func<Processor, ProgramReader, int> fct = OPCodesActions.Actions[code];
 
             reader.NextInt();
+
+            if (ActiveStackContainer is LibStackContainer)
+            {
+                ProgramReader r = new ProgramReader(ActiveStackContainer.Memory.Memory, 0);
+
+                ActiveStackContainer.As<LibStackContainer>().Invoke(LibraryHandler, r);
+            }
+
             counter += fct(this, reader);
 
             if (!Registers.JumpCarry)

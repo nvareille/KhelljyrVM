@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
@@ -16,6 +16,7 @@
     <ProjectReference Include="..\KhelljyrCommon\KhelljyrCommon.csproj" />
     <ProjectReference Include="..\KhelljyrCompiler\KhelljyrCompiler.csproj" />
     <ProjectReference Include="..\KhelljyrDecompiler\KhelljyrDecompiler.csproj" />
+    <ProjectReference Include="..\KhelljyrLibrary\KhelljyrLibrary.csproj" />
   </ItemGroup>
 
 </Project>

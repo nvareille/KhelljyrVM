@@ -15,6 +15,11 @@ namespace KhelljyrCommon
             Bytes.Add(BitConverter.GetBytes(c));
         }
 
+        public void Add(string str)
+        {
+            Bytes.Add(Encoding.ASCII.GetBytes(str));
+        }
+
         public void Add(OPCodes.Codes code)
         {
             Bytes.Add(BitConverter.GetBytes((int)code));
