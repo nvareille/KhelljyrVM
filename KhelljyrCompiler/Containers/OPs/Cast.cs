@@ -10,7 +10,7 @@ namespace KhelljyrCompiler
 {
     public partial class OPInterpretor
     {
-        private static void Cast(Compiler cmp, string[] args)
+        private static void Cast(Compiler cmp, Argument[] args)
         {
             Function fct = cmp.Functions.Last();
             Variable v1 = ArgumentSelector.ExtractVar(fct, args[1]);

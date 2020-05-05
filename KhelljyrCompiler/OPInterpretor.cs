@@ -11,7 +11,7 @@ namespace KhelljyrCompiler
 {
     public partial class OPInterpretor
     {
-        private Dictionary<string, Action<Compiler, string[]>> Fcts = new Dictionary<string, Action<Compiler, string[]>>
+        private Dictionary<string, Action<Compiler, Argument[]>> Fcts = new Dictionary<string, Action<Compiler, Argument[]>>
         {
             // Types Scalaires
             {"int", Int},
@@ -41,14 +41,26 @@ namespace KhelljyrCompiler
 
         };
 
-        public void Treat(Compiler cmp, string[] args)
+        public void Treat(Compiler cmp, Argument[] args)
         {
-            Fcts[args[0]](cmp, args);
+            int count = 0;
+
+            while (count < args.Length)
+            {
+                if (args[count].Type == ArgumentType.Quoted)
+                {
+                    args[count].Value = cmp.Symbols.AddSymbol(args[count].Value).ToString();
+                }
+
+                ++count;
+            }
+
+            Fcts[args[0].Value](cmp, args);
         }
 
-        private static Action<Compiler, string[]> BasicInstruction(Instruction ins)
+        private static Action<Compiler, Argument[]> BasicInstruction(Instruction ins)
         {
-            Action<Compiler, string[]> act = (cmp, args) =>
+            Action<Compiler, Argument[]> act = (cmp, args) =>
             {
                 Function fct = cmp.Functions.Last();
 
@@ -58,7 +70,7 @@ namespace KhelljyrCompiler
             return (act);
         }
 
-        private static void Ptr(Compiler cmp, string[] args)
+        private static void Ptr(Compiler cmp, Argument[] args)
         {
             int value = 0;
             Function fct = cmp.Functions.Last();
@@ -81,7 +93,7 @@ namespace KhelljyrCompiler
             fct.AddVariable(v);
         }
 
-        public static void Int(Compiler cmp, string[] args)
+        public static void Int(Compiler cmp, Argument[] args)
         {
             int value = 0;
             Function fct = cmp.Functions.Last();
@@ -129,7 +141,7 @@ namespace KhelljyrCompiler
             fct.AddVariable(v);
         }
 
-        public static void Float(Compiler cmp, string[] args)
+        public static void Float(Compiler cmp, Argument[] args)
         {
             float value = 0;
             Function fct = cmp.Functions.Last();
@@ -243,7 +255,7 @@ namespace KhelljyrCompiler
             return (false);
         }
 
-        public static void Set(Compiler cmp, string[] args)
+        public static void Set(Compiler cmp, Argument[] args)
         {
             int value;
             Function fct = cmp.Functions.Last();
@@ -267,7 +279,7 @@ namespace KhelljyrCompiler
             {
                 int count = 3;
                 int startIdx = 2;
-                FctCallInstruction fci = FctCallInstruction.GetCallInstruction(cmp, args, ref startIdx);
+                FctCallInstruction fci = FctCallInstruction.GetCallInstruction(cmp, args.StringArray(), ref startIdx);
 
                 count = startIdx + 1;
                 while (count < args.Length)
@@ -300,7 +312,7 @@ namespace KhelljyrCompiler
             return (v);
         }
 
-        public static void Add(Compiler cmp, string[] args)
+        public static void Add(Compiler cmp, Argument[] args)
         {
             Function fct = cmp.Functions.Last();
 
@@ -320,7 +332,7 @@ namespace KhelljyrCompiler
             fct.Instructions.Add(i);
         }
 
-        public static void Ret(Compiler cmp, string[] args)
+        public static void Ret(Compiler cmp, Argument[] args)
         {
             int value = 0;
             Function fct = cmp.Functions.Last();
@@ -366,20 +378,20 @@ namespace KhelljyrCompiler
             fct.Instructions.Add(r);
         }
 
-        public static void CallFct(Compiler cmp, string[] args)
+        public static void CallFct(Compiler cmp, Argument[] args)
         {
             int count = 0;
             int startIdx = 1;
             int value = 0;
             Function fct = cmp.Functions.Last();
-            FctCallInstruction c = FctCallInstruction.GetCallInstruction(cmp, args, ref startIdx);
+            FctCallInstruction c = FctCallInstruction.GetCallInstruction(cmp, args.StringArray(), ref startIdx);
 
             count = startIdx + 1;
-            c.ExtractVariables(fct, args, count);
+            c.ExtractVariables(fct, args.StringArray(), count);
             fct.Instructions.Add(c);
         }
 
-        public static void Label(Compiler cmp, string[] args)
+        public static void Label(Compiler cmp, Argument[] args)
         {
             Function fct = cmp.Functions.Last();
             Label lbl = new Label(args[1]);
@@ -388,7 +400,7 @@ namespace KhelljyrCompiler
             fct.Instructions.Add(lbl);
         }
 
-        public static void Jump(Compiler cmp, string[] args)
+        public static void Jump(Compiler cmp, Argument[] args)
         {
             Function fct = cmp.Functions.Last();
 

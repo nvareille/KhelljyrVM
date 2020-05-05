@@ -13,15 +13,16 @@ namespace ProgramGeneration
     [TestClass]
     public class CompilerTests
     {
-        public int TestFile(string file, IEnumerable<string> preprocessor = null, Processor p = null)
+        public static int TestFile(string file, IEnumerable<string> preprocessor = null, bool onlyCompile = false)
         {
             File.Copy("../../../../Docs/" + file, file, true);
             
             string outputName = file.Split('/').Last().Split('.').First();
-            p = p ?? new Processor();
+            Processor p = new Processor();
             Compiler c = new Compiler();
             Decompiler decompiler = new Decompiler();
 
+            LibrariesTest.PrepareLibraries(p, false);
             c.LibraryHandler = p.LibraryHandler;
             byte[] prog = null;
 
@@ -40,6 +41,11 @@ namespace ProgramGeneration
             decompiler.Decompile(prog, String.Format("{0}.dkhl", outputName));
             File.WriteAllBytes(String.Format("{0}.khl", outputName), prog);
 
+            if (onlyCompile)
+                return (0);
+
+            p = new Processor();
+            LibrariesTest.PrepareLibraries(p, true);
             p.LoadProgram(prog);
             return (p.Run());
         }
@@ -126,7 +132,7 @@ namespace ProgramGeneration
         [TestMethod]
         public void BasicLibCall()
         {
-            Assert.AreEqual(126, TestFile("Samples/BasicLibCall.txt", null, LibrariesTest.PrepareLibraries()));
+            Assert.AreEqual(126, TestFile("Samples/BasicLibCall.txt"));
         }
 
 

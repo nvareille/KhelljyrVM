@@ -8,7 +8,7 @@ namespace KhelljyrCompiler
 {
     public partial class OPInterpretor
     {
-        public static void Function(Compiler cmp, string[] args)
+        public static void Function(Compiler cmp, Argument[] args)
         {
             int count = 2;
             Function fct = new Function

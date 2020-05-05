@@ -146,9 +146,20 @@ namespace KhelljyrDecompiler
             Reader = new ProgramReader(program, 0);
 
             ReadFunctionTable();
+            ReadSymbolsTable();
             ReadProgram();
             
             Output.WriteFile(output);
+        }
+
+        public void ReadSymbolsTable()
+        {
+            Output.AppendLine("\nSymbols:");
+
+            while (Reader.GetCounter() < FuncsIdx[0] + (FuncsIdx.Count + 1) * Defines.SIZE_INT)
+            {
+                Output.AppendLine(Reader.NextString());
+            }
         }
 
         public List<string> ExtractArgs(OPCodes.Codes code)

@@ -15,7 +15,7 @@ namespace KhelljyrCompiler.Containers.Instructions
 
         public override int LocalAddressToWrite()
         {
-            return (Defines.SIZE_INT * 2);
+            return (Defines.SIZE_INT);
         }
 
         public override byte[] ByteOutput()

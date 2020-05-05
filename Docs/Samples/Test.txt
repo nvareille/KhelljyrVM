@@ -1,0 +1,10 @@
+fct main // Test commentaires
+	int a 36
+	int b 6
+	
+	ptr ptrA &a
+	ptr ptrB &b
+	
+	add *ptrA *ptrB *ptrA
+		
+	ret 0

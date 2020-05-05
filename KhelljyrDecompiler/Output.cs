@@ -69,5 +69,10 @@ namespace KhelljyrDecompiler
 
             return (BuildMerge(strs));
         }
+
+        public void AppendLine(string str)
+        {
+            Builder.Append(str + "\n");
+        }
     }
 }

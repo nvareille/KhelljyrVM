@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\KhelljyrCommon\KhelljyrCommon.csproj" />
+    <ProjectReference Include="..\KhelljyrLibrary\KhelljyrLibrary.csproj" />
   </ItemGroup>
 
 </Project>

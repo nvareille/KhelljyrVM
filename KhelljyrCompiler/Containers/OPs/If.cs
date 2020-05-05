@@ -20,7 +20,7 @@ namespace KhelljyrCompiler
             {">=", ConditionFlag.GreaterEquals},
         };
 
-        public static void If(Compiler cmp, string[] args)
+        public static void If(Compiler cmp, Argument[] args)
         {
             Function fct = cmp.Functions.Last();
             IfInstruction i = new IfInstruction();

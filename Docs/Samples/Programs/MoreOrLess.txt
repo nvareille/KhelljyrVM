@@ -1,0 +1,34 @@
+fct check cible choix
+	if cible > choix plus
+	if cible < choix moins
+	jmp trouve
+
+	lbl plus
+		call KhelljyrConsole Print "C'est plus !"
+		ret 0
+	
+	lbl moins
+		call KhelljyrConsole Print "C'est moins !"
+		ret 0
+		
+	lbl trouve
+		call KhelljyrConsole Print "Trouvé !"
+		ret 1
+
+
+fct main
+	int aTrouver 0
+	int choix 0
+	int result 0
+	
+	set aTrouver KhelljyrMath Rand 0 5
+	
+	lbl jeu
+		call KhelljyrConsole Print "Trouvez le chiffre ! [0, 5]"
+		set choix KhelljyrConsole ReadInt
+	
+		set result check aTrouver choix
+		
+		if result == 0 jeu
+		
+	ret 0

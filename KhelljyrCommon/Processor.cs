@@ -29,6 +29,20 @@ namespace KhelljyrCommon
 
             Program = new byte[prg.Length - start];
             Array.Copy(prg, start, Program, 0, prg.Length - start);
+            LoadSymbols(prg, start);
+        }
+
+        private void LoadSymbols(byte[] prg, int start)
+        {
+            ProgramReader r = new ProgramReader(prg, start);
+
+            while (r.GetCounter() < Functions[0] + start)
+            {
+                string str = r.NextString();
+                RangeContainer c = MMU.Alloc(str.Length + 1);
+
+                Array.Copy(str.Select(i => (byte)i).ToArray(), c.Memory, str.Length);
+            }
         }
 
         private int LoadFunctions(byte[] prg)
@@ -77,8 +91,7 @@ namespace KhelljyrCommon
             int counter = ActiveStackContainer.ProgramCounter;
             OPCodes.Codes code = GetOPCode(counter);
             ProgramReader reader = new ProgramReader(this, counter);
-            Func<Processor, ProgramReader, int> fct = OPCodesActions.Actions[code];
-
+            
             reader.NextInt();
 
             if (ActiveStackContainer is LibStackContainer)
@@ -86,9 +99,13 @@ namespace KhelljyrCommon
                 ProgramReader r = new ProgramReader(ActiveStackContainer.Memory.Memory, 0);
 
                 ActiveStackContainer.As<LibStackContainer>().Invoke(LibraryHandler, r);
+                OPCalls.Functions.FunctionPop(this, reader);
             }
-
-            counter += fct(this, reader);
+            else
+            {
+                Func<Processor, ProgramReader, int> fct = OPCodesActions.Actions[code];
+                counter += fct(this, reader);
+            }
 
             if (!Registers.JumpCarry)
                 ActiveStackContainer.ProgramCounter = counter;

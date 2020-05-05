@@ -15,11 +15,11 @@ namespace KhelljyrCommon.Libraries
             Resources.AddRange(objs);
         }
 
-        public void LoadLibrary(string path)
+        public void LoadLibrary(string path, bool runtime)
         {
             Assembly a = Assembly.LoadFrom(path);
 
-            IEnumerable<Type> b = a.GetTypes().Where(i => i.IsSubclassOf(typeof(KhelljyrCommon.Libraries.KhelljyrLibrary)));
+            IEnumerable<Type> b = a.GetTypes().Where(i => i.IsSubclassOf(typeof(KhelljyrLibrary)));
 
             foreach (Type type in b)
             {
@@ -28,16 +28,17 @@ namespace KhelljyrCommon.Libraries
                     this
                 });
 
-                lib.Init();
+                if (runtime)
+                    lib.Init();
                 LoadedLibraries.Add(new InvocableLibrary(lib));
             }
         }
 
-        public void LoadLibraries(IEnumerable<string> paths)
+        public void LoadLibraries(IEnumerable<string> paths, bool runtime)
         {
             foreach (string path in paths)
             {
-                LoadLibrary(path);
+                LoadLibrary(path, runtime);
             }
         }
 

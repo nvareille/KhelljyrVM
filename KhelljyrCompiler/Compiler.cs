@@ -18,7 +18,8 @@ namespace KhelljyrCompiler
         public List<string> Builder = new List<string>();
         public List<string> Files = new List<string>();
         public List<Function> Functions = new List<Function>();
-        
+        public StaticSymbolLibrary Symbols = new StaticSymbolLibrary();
+
         public void AddLines(string[] lines)
         {
             Builder.AddRange(lines);
@@ -93,33 +94,10 @@ namespace KhelljyrCompiler
 
             Builder.ForEach(i =>
             {
-                bool b = false;
+                Argument[] strs = LineParser.GetArgs(i);
 
-                i = TrimLine(i);
-
-                if (i == "") return;
-
-                string str = new string(i.TakeWhile(o =>
-                {
-                    if (o == '/')
-                    {
-                        if (b)
-                            return (false);
-                        b = true;
-                    }
-                    else
-                        b = false;
-
-                    return (true);
-                }).ToArray());
-
-                if (b)
-                    str = new string(str.SkipLast(1).ToArray());
-
-                str = TrimLine(str);
-
-                if (!string.IsNullOrEmpty(str))
-                    interpretor.Treat(this, str.Split(" "));
+                if (strs.Length != 0)
+                    interpretor.Treat(this, strs);
             });
 
             DoFunctionPriority();
@@ -175,14 +153,29 @@ namespace KhelljyrCompiler
             
             List<byte[]> final = new List<byte[]>();
 
+            byte[] symbols = CreateSymbolsTable();
             CreateFunctionTable(functionAddresses).ForEach(final.Add);
 
+            final.Add(symbols);
             bytes.ForEach(final.Add);
             byte[] program = final.SelectMany(i => i).ToArray();
-
+            
             ComputeLabelJumps(functionAddresses, program);
 
             return (program);
+        }
+
+        public byte[] CreateSymbolsTable()
+        {
+            int size = Symbols.TableSize;
+            byte[] symbols = new byte[size];
+
+            foreach (KeyValuePair<string, uint> pair in Symbols.Symbols)
+            {
+                Array.Copy(pair.Key.Select(i => (byte)i).ToArray(), 0, symbols, pair.Value, pair.Key.Length);
+            }
+
+            return (symbols);
         }
 
         public List<byte[]> CreateFunctionTable(List<int> addresses)
@@ -190,13 +183,14 @@ namespace KhelljyrCompiler
             List<byte[]> functionTable = new List<byte[]>();
 
             functionTable.Add(BitConverter.GetBytes(addresses.Count));
-            addresses.ForEach(i => functionTable.Add(BitConverter.GetBytes(i)));
+            addresses.ForEach(i => functionTable.Add(BitConverter.GetBytes(i + Symbols.TableSize)));
 
             return (functionTable);
         }
 
         public void ComputeLabelJumps(List<int> addresses, byte[] prog)
         {
+            int done = 0;
             int count = 1;
 
             foreach (Function function in Functions)
@@ -208,13 +202,21 @@ namespace KhelljyrCompiler
 
                     i.ComputeLabelPosition(function);
 
-                    byte[] addrToWrite = BitConverter.GetBytes(i.LabelContainer.InstructionPtr);
+                    byte[] addrToWrite = BitConverter.GetBytes(i.LabelContainer.InstructionPtr + Symbols.TableSize);
 
                     var a = i.InstructionPtr;
                     var b = i.LocalAddressToWrite();
-                    var c = count * Defines.SIZE_INT;
+                    var c = Symbols.TableSize;
+                    var d = (Functions.Count + 1) * Defines.SIZE_INT;
+                    int e = a + b + c + d;
 
-                    Array.Copy(addrToWrite, 0, prog,  a + b + c , addrToWrite.Length);
+                    Array.Copy(addrToWrite, 0, prog,  a + b + c + d, addrToWrite.Length);
+
+                    if (i is IfInstruction)
+                    {
+
+                    }
+
                 });
 
                 ++count;

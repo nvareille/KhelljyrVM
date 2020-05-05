@@ -86,5 +86,19 @@ namespace KhelljyrCommon
         {
             return (Counter >= Program.Length);
         }
+
+        public string NextString()
+        {
+            StringBuilder str = new StringBuilder();
+            byte b = NextByte();
+            
+            while (b != 0)
+            {
+                str.Append((char)b);
+                b = NextByte();
+            }
+
+            return (str.ToString());
+        }
     }
 }

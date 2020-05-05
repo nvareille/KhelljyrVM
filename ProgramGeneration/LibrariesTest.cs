@@ -8,7 +8,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace ProgramGeneration
 {
     [TestClass]
-    public static class LibrariesTest
+    public class LibrariesTest
     {
         private static readonly string[] Paths = new string[]
         {
@@ -16,19 +16,22 @@ namespace ProgramGeneration
         };
 
         [TestMethod, Priority(5)]
-        public static Processor PrepareLibraries()
+        public static void PrepareLibraries(Processor p, bool runtime)
         {
             List<string> paths = new List<string>();
-            Processor p = new Processor();
 
             foreach (string path in Paths)
             {
                 paths.AddRange(Directory.GetFiles(path, "*Lib.dll"));
             }
 
-            p.LibraryHandler.LoadLibraries(paths);
-            
-            return (p);
+            p.LibraryHandler.LoadLibraries(paths, runtime);
+        }
+
+        [TestMethod]
+        public void LibraryStringFormat()
+        {
+            CompilerTests.TestFile("Samples/LibraryStringFormat.txt", null, true);
         }
     }
 }

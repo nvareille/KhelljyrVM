@@ -22,6 +22,11 @@ namespace KhelljyrCommon
         {
             return (Start <= dest && End >= dest);
         }
+
+        public void Write(byte[] b)
+        {
+            Array.Copy(b, Memory, b.Length);
+        }
     }
 
     public class MMU

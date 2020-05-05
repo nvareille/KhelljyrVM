@@ -4,7 +4,7 @@ using KhelljyrCommon.Libraries;
 
 namespace STDLib
 {
-    public class KhelljyrIO : KhelljyrLibrary
+    public class KhelljyrIO : KhelljyrCommon.Libraries.KhelljyrLibrary
     {
         public KhelljyrIO(LibraryHandler handler) : base(handler) { }
 
