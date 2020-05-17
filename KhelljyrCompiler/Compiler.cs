@@ -211,12 +211,6 @@ namespace KhelljyrCompiler
                     int e = a + b + c + d;
 
                     Array.Copy(addrToWrite, 0, prog,  a + b + c + d, addrToWrite.Length);
-
-                    if (i is IfInstruction)
-                    {
-
-                    }
-
                 });
 
                 ++count;

@@ -38,9 +38,9 @@ namespace ProgramGeneration
             c.Compile();
 
             prog = c.BinaryOutput();
-            decompiler.Decompile(prog, String.Format("{0}.dkhl", outputName));
             File.WriteAllBytes(String.Format("{0}.khl", outputName), prog);
-
+            decompiler.Decompile(prog, String.Format("{0}.dkhl", outputName));
+            
             if (onlyCompile)
                 return (0);
 

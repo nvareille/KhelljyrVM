@@ -336,43 +336,51 @@ namespace KhelljyrCompiler
         {
             int value = 0;
             Function fct = cmp.Functions.Last();
-            Variable v = fct.Variables.FirstOrDefault(a => a.Name == args[1]);
             Instruction r = null;
-            
-            if (v != null)
-            {
-                r = new VariableRetInstruction(v);
-            }
-            else if(Int32.TryParse(args[1], out value))
-            {
-                v = new ConstIntVariable(value);
-                r = new VariableRetInstruction(v);
 
-                fct.Variables.Add(v);
+            if (args.Length == 1)
+            {
+                r = new RetInstruction();
             }
             else
             {
-                int count = 2;
-
-                FunctionRetInstruction ret = new FunctionRetInstruction
+                Variable v = fct.Variables.FirstOrDefault(a => a.Name == args[1]);
+                
+                if (v != null)
                 {
-                    FunctionToCall = cmp.Functions.First(i => i.Name == args[1])
-                };
-
-                while (args.Length > count)
+                    r = new VariableRetInstruction(v);
+                }
+                else if (Int32.TryParse(args[1], out value))
                 {
-                    v = fct.Variables.FirstOrDefault(a => a.Name == args[count]);
+                    v = new ConstIntVariable(value);
+                    r = new VariableRetInstruction(v);
 
-                    if (v == null && Int32.TryParse(args[count], out value))
+                    fct.Variables.Add(v);
+                }
+                else
+                {
+                    int count = 2;
+
+                    FunctionRetInstruction ret = new FunctionRetInstruction
                     {
-                        v = new ConstIntVariable(value);
+                        FunctionToCall = cmp.Functions.First(i => i.Name == args[1])
+                    };
+
+                    while (args.Length > count)
+                    {
+                        v = fct.Variables.FirstOrDefault(a => a.Name == args[count]);
+
+                        if (v == null && Int32.TryParse(args[count], out value))
+                        {
+                            v = new ConstIntVariable(value);
+                        }
+
+                        ret.Variables.Add(v);
+                        ++count;
                     }
 
-                    ret.Variables.Add(v);
-                    ++count;
+                    r = ret;
                 }
-
-                r = ret;
             }
 
             fct.Instructions.Add(r);
