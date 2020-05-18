@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using KhelljyrCommon;
+using KhelljyrCommon.Semantics;
 using KhelljyrCompiler.Containers;
 
 namespace KhelljyrCompiler
@@ -28,6 +29,7 @@ namespace KhelljyrCompiler
             }
 
             cmp.Functions.Add(fct);
+            cmp.ProcessingBlock = fct;
         }
     }
 }

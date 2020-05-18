@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using KhelljyrCommon;
+using KhelljyrCompiler.Containers;
 
-namespace KhelljyrCompiler.Containers
+namespace KhelljyrCommon.Semantics
 {
     // TODO
     public abstract class Variable : Extractable
@@ -53,6 +51,11 @@ namespace KhelljyrCompiler.Containers
             Value = value;
         }
 
+        public void SetValue(T value)
+        {
+            Value = value;
+        }
+
         public byte[] GetValueAsBytes()
         {
             if (Value is int)
@@ -74,6 +77,11 @@ namespace KhelljyrCompiler.Containers
 
     public class ConstIntVariable : ConstVariable<int>
     {
+        public ConstIntVariable() : base(default, TypeFlag.Int)
+        {
+            Size = Defines.SIZE_INT;
+        }
+
         public ConstIntVariable(int value) : base(value, TypeFlag.Int)
         {
             Size = Defines.SIZE_INT;
@@ -90,6 +98,11 @@ namespace KhelljyrCompiler.Containers
 
     public class ConstFloatVariable : ConstVariable<float>
     {
+        public ConstFloatVariable() : base(default, TypeFlag.Float)
+        {
+            Size = Defines.SIZE_FLOAT;
+        }
+
         public ConstFloatVariable(float value) : base(value, TypeFlag.Float)
         {
             Size = Defines.SIZE_FLOAT;

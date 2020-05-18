@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using KhelljyrCommon;
 using KhelljyrCommon.Libraries;
+using KhelljyrCommon.Semantics;
 
 namespace KhelljyrCompiler.Containers.Instructions
 {

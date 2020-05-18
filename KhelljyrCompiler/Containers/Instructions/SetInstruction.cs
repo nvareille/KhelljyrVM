@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Reflection.Emit;
 using System.Text;
 using KhelljyrCommon;
+using KhelljyrCommon.Semantics;
 
 namespace KhelljyrCompiler.Containers.Instructions
 {

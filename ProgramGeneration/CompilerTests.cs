@@ -49,23 +49,7 @@ namespace ProgramGeneration
             p.LoadProgram(prog);
             return (p.Run());
         }
-
-        public int TestCode(string code)
-        {
-            Compiler c = new Compiler();
-            Processor p = new Processor();
-
-            byte[] prog = null;
-
-            c.AddLines(code.Split());
-            c.Compile();
-
-            prog = c.BinaryOutput();
-
-            p.LoadProgram(prog);
-            return (p.Run());
-        }
-
+        
         [TestMethod]
         public void BasicAdd()
         {
@@ -135,6 +119,11 @@ namespace ProgramGeneration
             Assert.AreEqual(126, TestFile("Samples/BasicLibCall.txt"));
         }
 
+        [TestMethod]
+        public void BasicStructures()
+        {
+            Assert.AreEqual(84, TestFile("Samples/BasicStructures.txt"));
+        }
 
         [TestMethod]
         public void BasicTest()

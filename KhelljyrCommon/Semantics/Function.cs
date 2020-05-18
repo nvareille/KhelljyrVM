@@ -2,7 +2,7 @@
 using System.Linq;
 using KhelljyrCompiler.Containers;
 
-namespace KhelljyrCommon
+namespace KhelljyrCommon.Semantics
 {
     public class Function
     {

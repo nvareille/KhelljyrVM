@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using KhelljyrCommon;
+using KhelljyrCommon.Semantics;
 
 namespace KhelljyrCompiler.Containers.Instructions
 {

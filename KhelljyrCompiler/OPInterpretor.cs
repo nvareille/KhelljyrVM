@@ -4,23 +4,27 @@ using System.Linq;
 using System.Text;
 using KhelljyrCommon;
 using KhelljyrCommon.Libraries;
+using KhelljyrCommon.Semantics;
 using KhelljyrCompiler.Containers;
 using KhelljyrCompiler.Containers.Instructions;
 
 namespace KhelljyrCompiler
 {
+    public delegate bool ConverterFct<T>(string str, out T toParse);
+
     public partial class OPInterpretor
     {
         private Dictionary<string, Action<Compiler, Argument[]>> Fcts = new Dictionary<string, Action<Compiler, Argument[]>>
         {
             // Types Scalaires
-            {"int", Int},
-            {"float", Float},
+            {"int", GenericVariableType<int, IntVariable, ConstIntVariable>(Int32.TryParse)},
+            {"float", GenericVariableType<float, FloatVariable, ConstFloatVariable>(Single.TryParse)},
             {"ptr", Ptr},
 
             // Declareurs
             {"fct", Function},
             {"lbl", Label},
+            {"struct", Struct},
 
             // Fonctions
             {"call", CallFct},
@@ -38,7 +42,6 @@ namespace KhelljyrCompiler
             {"jmp", Jump},
 
             {"brk", BasicInstruction(new GenericInstruction(OPCodes.Codes.Brk))}
-
         };
 
         public void Treat(Compiler cmp, Argument[] args)
@@ -93,102 +96,70 @@ namespace KhelljyrCompiler
             fct.AddVariable(v);
         }
 
-        public static void Int(Compiler cmp, Argument[] args)
+        private static Action<Compiler, Argument[]> GenericVariableType<T, U, V>(ConverterFct<T> converter) where U : Variable<T>, new() where V : ConstVariable<T>, new()
         {
-            int value = 0;
-            Function fct = cmp.Functions.Last();
-            IntVariable v = new IntVariable
+            Action<Compiler, Argument[]> act = (cmp, args) =>
             {
-                Name = args[1],
-            };
-
-            if (args.Length == 3 && Int32.TryParse(args[2], out value))
-            {
-                v.HaveValue = true;
-                v.Value = value;
-
-                fct.Instructions.Insert(0, new NewSetInstruction
+                U v = new U
                 {
-                    Destination = v,
-                    Source = new ConstValue(v.Value)
-                });
-            }
-            else if (args.Length >= 3)
-            {
-                int count = 3;
-                Function fctToCall = cmp.Functions.First(i => i.Name == args[2]);
-                FunctionRetInstruction ret = new FunctionRetInstruction
-                {
-                    FunctionToCall = fctToCall
+                    Name = args[1],
                 };
 
-                fct.Instructions.Add(ret);
-                fct.Instructions.Add(new RetCarryInstruction(v));
-                while (args.Length > count)
+                if (cmp.ProcessingBlock is Structure)
                 {
-                    Variable target = fct.Variables.FirstOrDefault(a => a.Name == args[count]);
+                    cmp.ProcessingBlock.As<Structure>().Variables.Add(v);
 
-                    if (target == null && Int32.TryParse(args[count], out value))
-                    {
-                        target = new ConstIntVariable(value);
-                    }
-
-                    ret.Variables.Add(target);
-                    ++count;
+                    return;
                 }
-            }
 
-            fct.AddVariable(v);
-        }
+                T value;
+                Function fct = cmp.Functions.Last();
 
-        public static void Float(Compiler cmp, Argument[] args)
-        {
-            float value = 0;
-            Function fct = cmp.Functions.Last();
-            FloatVariable v = new FloatVariable
-            {
-                Name = args[1],
+                if (args.Length == 3 && converter(args[2], out value))
+                {
+                    v.HaveValue = true;
+                    v.Value = value;
+
+                    fct.Instructions.Insert(0, new NewSetInstruction
+                    {
+                        Destination = v,
+                        Source = new ConstValue(v.Value)
+                    });
+                }
+                else if (args.Length >= 3)
+                {
+                    int count = 3;
+                    Function fctToCall = cmp.Functions.First(i => i.Name == args[2]);
+                    FunctionRetInstruction ret = new FunctionRetInstruction
+                    {
+                        FunctionToCall = fctToCall
+                    };
+
+                    fct.Instructions.Add(ret);
+                    fct.Instructions.Add(new RetCarryInstruction(v));
+                    while (args.Length > count)
+                    {
+                        Variable target = fct.Variables.FirstOrDefault(a => a.Name == args[count]);
+
+                        if (target == null && converter(args[count], out value))
+                        {
+                            V constVar = new V();
+
+                            constVar.SetValue(value);
+                            target = constVar;
+                        }
+
+                        ret.Variables.Add(target);
+                        ++count;
+                    }
+                }
+
+                fct.AddVariable(v);
             };
 
-            if (args.Length == 3 && Single.TryParse(args[2], out value))
-            {
-                v.HaveValue = true;
-                v.Value = value;
-
-                fct.Instructions.Insert(0, new NewSetInstruction
-                {
-                    Destination = v,
-                    Source = new ConstValue(v.Value)
-                });
-            }
-            else if (args.Length >= 3)
-            {
-                int count = 3;
-                Function fctToCall = cmp.Functions.First(i => i.Name == args[2]);
-                FunctionRetInstruction ret = new FunctionRetInstruction
-                {
-                    FunctionToCall = fctToCall
-                };
-
-                fct.Instructions.Add(ret);
-                fct.Instructions.Add(new RetCarryInstruction(v));
-                while (args.Length > count)
-                {
-                    Variable target = fct.Variables.FirstOrDefault(a => a.Name == args[count]);
-
-                    if (target == null && Single.TryParse(args[count], out value))
-                    {
-                        target = new ConstFloatVariable(value);
-                    }
-
-                    ret.Variables.Add(target);
-                    ++count;
-                }
-            }
-
-            fct.AddVariable(v);
+            return (act);
         }
-
+        
         private static bool TryPtrSet(Function fct, Variable v, string stringValue)
         {
             Variable ptr = fct.GetVariable(stringValue);

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using KhelljyrCommon;
-
-namespace KhelljyrCompiler.Containers
+﻿namespace KhelljyrCommon.Semantics
 {
     public abstract class Instruction
     {

@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using KhelljyrCompiler;
 
-namespace KhelljyrCompiler.Containers
+namespace KhelljyrCommon.Semantics
 {
     public class Label : Jumpable
     {

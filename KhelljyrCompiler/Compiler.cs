@@ -6,6 +6,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using KhelljyrCommon;
 using KhelljyrCommon.Libraries;
+using KhelljyrCommon.Semantics;
 using KhelljyrCompiler.Containers;
 using KhelljyrCompiler.Containers.Instructions;
 
@@ -14,17 +15,15 @@ namespace KhelljyrCompiler
     public class Compiler
     {
         public Preprocessor Preprocessor = new Preprocessor();
+        public OPInterpretor OPInterpretor = new OPInterpretor();
         public LibraryHandler LibraryHandler = new LibraryHandler();
-        public List<string> Builder = new List<string>();
+        public List<Tuple<string, int, string>> Builder = new List<Tuple<string, int, string>>();
         public List<string> Files = new List<string>();
+        public object ProcessingBlock;
         public List<Function> Functions = new List<Function>();
+        public List<Structure> Structures = new List<Structure>();
         public StaticSymbolLibrary Symbols = new StaticSymbolLibrary();
-
-        public void AddLines(string[] lines)
-        {
-            Builder.AddRange(lines);
-        }
-
+        
         public void AddFile(string file)
         {
             Files.Add(file);
@@ -55,7 +54,9 @@ namespace KhelljyrCompiler
         {
             Files.ForEach(i =>
             {
-                Builder.AddRange(File.ReadAllLines(i));
+                int count = 0;
+                
+                Builder.AddRange(File.ReadAllLines(i).Select(o => new Tuple<string, int, string>(i, ++count, o)));
             });
         }
 
@@ -71,18 +72,18 @@ namespace KhelljyrCompiler
 
         public void Preprocess()
         {
-            List<string> preprocessed = new List<string>();
+            List<Tuple<string, int, string>> preprocessed = new List<Tuple<string, int, string>>();
 
             Builder.ForEach(i =>
             {
-                string str = i;
+                string str = i.Item3;
 
                 foreach (KeyValuePair<string, string> pair in Preprocessor.Values)
                 {
                     str = str.Replace(pair.Key, pair.Value);
                 }
 
-                preprocessed.Add(str);
+                preprocessed.Add(new Tuple<string, int, string>(i.Item1, i.Item2, str));
             });
 
             Builder = preprocessed;
@@ -90,17 +91,25 @@ namespace KhelljyrCompiler
 
         public void Process()
         {
-            OPInterpretor interpretor = new OPInterpretor();
-
-            Builder.ForEach(i =>
+            Tuple<string, int, string> line = null;
+            
+            try
             {
-                Argument[] strs = LineParser.GetArgs(i);
+                Builder.ForEach(i =>
+                {
+                    line = i;
+                    Argument[] strs = LineParser.GetArgs(line.Item3);
 
-                if (strs.Length != 0)
-                    interpretor.Treat(this, strs);
-            });
+                    if (strs.Length != 0)
+                        OPInterpretor.Treat(this, strs);
+                });
 
-            DoFunctionPriority();
+                DoFunctionPriority();
+            }
+            catch (Exception e)
+            {
+                throw new Exception(String.Format("Compilation Error: [{0}, {1}] {2}", line.Item1, line.Item2, line.Item3));
+            }
         }
 
         private void DoFunctionPriority()
