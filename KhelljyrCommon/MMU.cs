@@ -23,6 +23,11 @@ namespace KhelljyrCommon
             return (Start <= dest && End >= dest);
         }
 
+        public void Write(string str)
+        {
+            Write(str.ToByteArray());
+        }
+
         public void Write(byte[] b)
         {
             Array.Copy(b, Memory, b.Length);

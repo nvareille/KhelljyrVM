@@ -1,2 +1,3 @@
 fct main
+	call Print "Appel à une lib"
 	ret FT

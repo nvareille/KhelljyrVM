@@ -45,30 +45,18 @@ namespace KhelljyrCommon.OPCalls
 
             if (f == TypeFlag.Char)
             {
-                if (o is char)
-                    b = BitConverter.GetBytes((char) o);
-                if (o is int)
-                    b = BitConverter.GetBytes((char) o);
-                if (o is float)
-                    b = BitConverter.GetBytes((char) o);
+                o = Conversions.ToChar(o);
+                b = BitConverter.GetBytes((char)o);
             }
             else if (f == TypeFlag.Int)
             {
-                if (o is char)
-                    b = BitConverter.GetBytes((int)o);
-                if (o is int)
-                    b = BitConverter.GetBytes((int)o);
-                if (o is float)
-                    b = BitConverter.GetBytes((int)o);
+                o = Conversions.ToInteger(o);
+                b = BitConverter.GetBytes((int)o);
             }
             else if (f == TypeFlag.Float)
             {
-                if (o is char)
-                    b = BitConverter.GetBytes((float)o);
-                if (o is int)
-                    b = BitConverter.GetBytes((float)o);
-                if (o is float)
-                    b = BitConverter.GetBytes((float)o);
+                o = Conversions.ToSingle(o);
+                b = BitConverter.GetBytes((float)o);
             }
 
             return (b);
@@ -119,15 +107,15 @@ namespace KhelljyrCommon.OPCalls
             switch (computeType)
             {
                 case TypeFlag.Char:
-                    v1 = (char)v1 + (char)v2;
+                    v1 = Conversions.ToChar(v1) + Conversions.ToChar(v2);
                     break;
 
                 case TypeFlag.Int:
-                    v1 = (int) v1 + (int) v2;
+                    v1 = Conversions.ToInteger(v1) + Conversions.ToInteger(v2);
                     break;
 
                 case TypeFlag.Float:
-                    v1 = (float) v1 + (float) v2;
+                    v1 = Conversions.ToSingle(v1) + Conversions.ToSingle(v2);
                     break;
             }
 

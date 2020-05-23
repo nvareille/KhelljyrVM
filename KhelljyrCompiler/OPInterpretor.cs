@@ -130,11 +130,8 @@ namespace KhelljyrCompiler
                 {
                     int count = 3;
                     Function fctToCall = cmp.Functions.First(i => i.Name == args[2]);
-                    FunctionRetInstruction ret = new FunctionRetInstruction
-                    {
-                        FunctionToCall = fctToCall
-                    };
-
+                    FctCallInstruction ret = new FctCallInstruction(fctToCall);
+                    
                     fct.Instructions.Add(ret);
                     fct.Instructions.Add(new RetCarryInstruction(v));
                     while (args.Length > count)

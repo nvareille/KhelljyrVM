@@ -47,7 +47,6 @@ namespace KhelljyrCompiler.Containers.Instructions
             }
             
             Bytes.Add(OPCodes.Codes.FctStart);
-            
             Bytes.Add(OPCodes.Codes.FctPop);
             
             return (Bytes.Convert());

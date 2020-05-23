@@ -1,1 +1,3 @@
 #DEFINE FT 42
+
+#EXPORT KhelljyrConsole Print

@@ -55,6 +55,15 @@ namespace KhelljyrCommon
             return (value);
         }
 
+        public float NextFloat()
+        {
+            float value = BitConverter.ToSingle(Program, Counter);
+
+            MoveCounter(Defines.SIZE_FLOAT);
+
+            return (value);
+        }
+
         public byte NextByte()
         {
             byte value = Program[Counter];

@@ -10,7 +10,6 @@ namespace STDLib
     public class KhelljyrMath : KhelljyrCommon.Libraries.KhelljyrLibrary
     {
         private Processor Processor;
-
         private Random Random;
 
         public KhelljyrMath(LibraryHandler handler) : base(handler) { }

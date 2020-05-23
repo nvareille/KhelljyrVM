@@ -83,6 +83,7 @@ namespace ProgramGeneration
         [TestMethod]
         public void BasicPreprocessing()
         {
+            File.Copy("../../../../Docs/Samples/Defines.txt", "Samples/Defines.txt", true);
             Assert.AreEqual(42, TestFile("Samples/BasicPreprocessing.txt", new List<string>
             {
                 "Samples/Defines.txt"
@@ -123,6 +124,12 @@ namespace ProgramGeneration
         public void BasicStructures()
         {
             Assert.AreEqual(84, TestFile("Samples/BasicStructures.txt"));
+        }
+
+        [TestMethod]
+        public void BasicTemplates()
+        {
+            Assert.AreEqual(85, TestFile("Samples/BasicTemplate.txt"));
         }
 
         [TestMethod]

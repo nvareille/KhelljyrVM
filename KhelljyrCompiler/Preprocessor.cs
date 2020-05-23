@@ -24,6 +24,9 @@ namespace KhelljyrCompiler
 
             if (args[0] == "#DEFINE")
                 Values.Add(args[1], args[2]);
+
+            if (args[0] == "#EXPORT")
+                Values.Add(args[2], args[1] + " " + args[2]);
         }
 
         public void AddFile(string file)

@@ -40,7 +40,7 @@ namespace STDLib
 
             string str = ptr.GetString();
 
-            Regex r = new Regex(@"\{%[d,s]}");
+            Regex r = new Regex(@"\{%[d,s,f]}");
             MatchCollection matches = r.Matches(str);
 
             foreach (Match match in matches)
@@ -49,6 +49,8 @@ namespace STDLib
 
                 if (match.Value == "{%d}")
                     obj = reader.NextInt();
+                if (match.Value == "{%f}")
+                    obj = reader.NextFloat();
                 if (match.Value == "{%s}")
                 {
                     obj = new Pointer(Processor.MMU)
@@ -63,7 +65,7 @@ namespace STDLib
 
             RangeContainer c = Processor.MMU.Alloc(str.Length + 1);
 
-            c.Write(str.Select(i => (byte) i).ToArray());
+            c.Write(str);
             Processor.Registers.SetReturnCarry(c.Start);
         }
     }
