@@ -1,6 +1,5 @@
 version: 1.0.{build}.{branch}
 build_script:
 - sh: dotnet build
-test:
-  assemblies:
-    - '**\ProgramGeneration.dll'
+after_test:
+- cmd: vstest.console /logger:Appveyor **\ProgramGeneration.dll
