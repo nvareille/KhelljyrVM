@@ -15,6 +15,8 @@ namespace ProgramGeneration
     {
         public static int TestFile(string file, IEnumerable<string> preprocessor = null, bool onlyCompile = false)
         {
+            if (!Directory.Exists("Samples"))
+                Directory.CreateDirectory("Samples");
             File.Copy("../../../../Docs/" + file, file, true);
             
             string outputName = file.Split('/').Last().Split('.').First();
