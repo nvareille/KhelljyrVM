@@ -134,7 +134,7 @@ namespace ProgramGeneration
             Assert.AreEqual(85, TestFile("Samples/BasicTemplate.txt"));
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory("Excluded")]
         public void BasicTest()
         {
             Assert.AreEqual(42, TestFile("Samples/Test.txt"));
