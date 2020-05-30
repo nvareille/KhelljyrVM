@@ -15,7 +15,6 @@ namespace ProgramGeneration
             "../../../../STDLib/bin/Debug/netcoreapp2.2/"
         };
 
-        [TestMethod, Priority(5)]
         public static void PrepareLibraries(Processor p, bool runtime)
         {
             List<string> paths = new List<string>();
