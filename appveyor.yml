@@ -2,4 +2,4 @@ version: 1.0.{build}.{branch}
 build_script:
 - sh: dotnet build
 after_test:
-- cmd: ll && vstest.console /logger:Appveyor **\ProgramGeneration.dll
+- cmd: ls -l ; vstest.console /logger:Appveyor **\ProgramGeneration.dll
