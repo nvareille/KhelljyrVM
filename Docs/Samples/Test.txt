@@ -1,16 +1,15 @@
-#TEMPLATE Test <T> <U>
-fct Test
-	<T> var
+#TEMPLATE Malloc <T>
+fct Malloc size
+	ptr p
 	
-	add var <U> var
+	set p KhelljyrMemory InternalMalloc "<T>" size
 	
-	ret var
+	ret p
 #END
 
 fct main
-	int i Test<int, 42>	
-	float f Test<float, 43>	
+	ptr p
 	
-	add i f i
-	
-	ret i
+	set p Malloc<int> SIZEOF(int)
+
+	ret p

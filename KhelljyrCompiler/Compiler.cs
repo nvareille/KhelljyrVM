@@ -48,7 +48,16 @@ namespace KhelljyrCompiler
             ReadFiles();
             Preprocess();
             GenTemplates();
+            DumpCode();
             Process();
+        }
+
+        private void DumpCode()
+        {
+            StringBuilder b = new StringBuilder();
+
+            Builder.ForEach(i => b.AppendLine(i.Item3));
+            File.WriteAllText("TempCode.khl", b.ToString());
         }
 
         private void GenTemplates()
